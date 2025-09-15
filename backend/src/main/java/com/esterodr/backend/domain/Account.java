@@ -21,6 +21,10 @@ public class Account {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "client_id")
+    private Client client;
+
     @Column(name = "account_number", length = 12)
     private String accountNumber;
 

@@ -50,6 +50,7 @@ CREATE TABLE clients(
 
 CREATE TABLE accounts(
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    client_id uuid NOT NULL REFERENCES clients(id),
     account_number varchar(12) NOT NULL UNIQUE,
     type account_type NOT NULL,
     balance numeric(15, 2),

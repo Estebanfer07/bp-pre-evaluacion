@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,6 +25,9 @@ public class Client {
     private Person person;
 
     private String password;
+
+    @OneToMany(mappedBy = "client")
+    private List<Account> accounts;
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
