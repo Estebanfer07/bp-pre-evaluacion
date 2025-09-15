@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:16
+    container_name: bp_db
+    restart: always
+    environment:
+      POSTGRES_DB: ${DB_NAME:mybankdb}
+      POSTGRES_USER: ${DB_USER:esterodr}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:MyS3cretP4ss}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./backend
+    container_name: bp_backend
+    depends_on:
+      - db
+    environment:
+      DB_DOMAIN: db
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-bp_db}
+      DB_USER: ${DB_USER:-bp_user}
+      DB_PASSWORD: ${DB_PASSWORD:-bp_pass}
+      JPA_SHOW_SQL: "true"
+    ports:
+      - "8080:8080"
+    restart: always
+
+  frontend:
+    build:
+      context: ./Frontend
+    container_name: bp_frontend
+    ports:
+      - "5173:5173"
+    restart: unless-stopped
+
+volumes:
+  pgdata:
