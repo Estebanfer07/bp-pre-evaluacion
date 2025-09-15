@@ -12,6 +12,7 @@ import com.esterodr.backend.repository.AccountRepository;
 import com.esterodr.backend.service.AccountService;
 import com.esterodr.backend.service.dto.CreateAccountDto;
 import com.esterodr.backend.service.dto.UpdateAccountDto;
+import com.esterodr.backend.util.BeanUtils;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,18 +28,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account createAccount(CreateAccountDto accountData) {
         Account account = new Account();
-        account.setType(accountData.getType());
-        account.setBalance(accountData.getBalance());
+        BeanUtils.copyNonNullProperties(accountData, account);
         return accountRepository.save(account);
     }
 
     @Override
     public Optional<Account> updateAccount(UUID id, UpdateAccountDto dto) {
         return accountRepository.findById(id).map(account -> {
-            if (dto.getType() != null)
-                account.setType(dto.getType());
-            if (dto.getBalance() != null)
-                account.setBalance(dto.getBalance());
+            BeanUtils.copyNonNullProperties(dto, account);
             return accountRepository.save(account);
         });
     }
@@ -53,11 +50,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Optional<Account> getAccount(UUID id) {
-        return accountRepository.findById(id);
+        return accountRepository.findByIdAndState(id, AccountState.ACTIVE);
     }
 
     @Override
     public List<Account> getAllAccounts() {
-        return accountRepository.findAll();
+        return accountRepository.findAllByState(AccountState.ACTIVE);
     }
 }
