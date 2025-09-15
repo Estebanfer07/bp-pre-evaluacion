@@ -4,20 +4,25 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.esterodr.backend.domain.Account;
+import com.esterodr.backend.domain.enums.AccountState;
 import com.esterodr.backend.repository.AccountRepository;
 import com.esterodr.backend.service.AccountService;
 import com.esterodr.backend.service.dto.CreateAccountDto;
 import com.esterodr.backend.service.dto.UpdateAccountDto;
 
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AccountServiceImpl implements AccountService {
 
-    @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @Override
     public Account createAccount(CreateAccountDto accountData) {
@@ -40,7 +45,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteAccount(UUID id) {
-        accountRepository.deleteById(id);
+        accountRepository.findById(id).map(account -> {
+            account.setState(AccountState.INACTIVE);
+            return accountRepository.save(account);
+        });
     }
 
     @Override
