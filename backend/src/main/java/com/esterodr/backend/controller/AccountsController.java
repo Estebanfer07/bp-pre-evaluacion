@@ -1,16 +1,18 @@
-package com.esterodr.controller;
+package com.esterodr.backend.controller;
 
-import com.esterodr.domain.Account;
-import com.esterodr.service.AccountService;
-import com.esterodr.service.dto.CreateAccountDto;
-import com.esterodr.service.dto.UpdateAccountDto;
-import jakarta.validation.Valid;
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.UUID;
+import com.esterodr.backend.domain.Account;
+import com.esterodr.backend.service.AccountService;
+import com.esterodr.backend.service.dto.CreateAccountDto;
+import com.esterodr.backend.service.dto.UpdateAccountDto;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/accounts")

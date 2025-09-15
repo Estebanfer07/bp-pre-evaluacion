@@ -1,16 +1,17 @@
-package com.esterodr.service.impl;
-
-import com.esterodr.domain.Account;
-import com.esterodr.repository.AccountRepository;
-import com.esterodr.service.AccountService;
-import com.esterodr.service.dto.CreateAccountDto;
-import com.esterodr.service.dto.UpdateAccountDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+package com.esterodr.backend.service.impl;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.esterodr.backend.domain.Account;
+import com.esterodr.backend.repository.AccountRepository;
+import com.esterodr.backend.service.AccountService;
+import com.esterodr.backend.service.dto.CreateAccountDto;
+import com.esterodr.backend.service.dto.UpdateAccountDto;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -19,10 +20,10 @@ public class AccountServiceImpl implements AccountService {
     private AccountRepository accountRepository;
 
     @Override
-    public Account createAccount(CreateAccountDto dto) {
+    public Account createAccount(CreateAccountDto accountData) {
         Account account = new Account();
-        account.setType(dto.getType());
-        account.setBalance(dto.getBalance());
+        account.setType(accountData.getType());
+        account.setBalance(accountData.getBalance());
         return accountRepository.save(account);
     }
 

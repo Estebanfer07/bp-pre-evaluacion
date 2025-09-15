@@ -43,17 +43,17 @@ CREATE TABLE clients(
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     person_id uuid NOT NULL REFERENCES people(id),
     password varchar(255) NOT NULL,
-    state client_state NOT NULL,
+    state client_state NOT NULL DEFAULT 'ACTIVE',
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now()
 );
 
 CREATE TABLE accounts(
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    account_number char(12) NOT NULL UNIQUE,
+    account_number varchar(12) NOT NULL UNIQUE,
     type account_type NOT NULL,
     balance numeric(15, 2),
-    state account_state NOT NULL,
+    state account_state NOT NULL DEFAULT 'ACTIVE',
     created_at timestamp with time zone DEFAULT now(),
     updated_at timestamp with time zone DEFAULT now()
 );

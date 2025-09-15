@@ -1,31 +1,27 @@
-package com.esterodr.domain;
+package com.esterodr.backend.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Column;
-import jakarta.persistence.PrePersist;
-import com.esterodr.domain.enums.AccountState;
-import com.esterodr.domain.enums.AccountType;
-
+import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import com.esterodr.backend.domain.enums.AccountState;
+import com.esterodr.backend.domain.enums.AccountType;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.Random;
 
 @Data
 @Entity
+@Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Column(unique = true, nullable = false, updatable = false, length = 12)
+    @Column(name = "account_number", length = 12)
     private String accountNumber;
 
     @PrePersist
@@ -41,7 +37,8 @@ public class Account {
     private Double balance;
 
     @Enumerated(EnumType.STRING)
-    private AccountState state;
+    @Column(name = "state")
+    private AccountState state = AccountState.ACTIVE;
 
     @CreationTimestamp
     @Column(updatable = false)

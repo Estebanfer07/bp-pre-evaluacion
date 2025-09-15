@@ -1,6 +1,7 @@
-package com.esterodr.domain;
+package com.esterodr.backend.domain;
 
-import com.esterodr.domain.enums.MovementType;
+import com.esterodr.backend.domain.enums.ClientState;
+
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,24 +12,22 @@ import java.util.UUID;
 
 @Data
 @Entity
-@Table(name = "movements")
-public class Movements {
+@Table(name = "clients")
+public class Client {
     @Id
     @GeneratedValue
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id")
-    private Account account;
+    @JoinColumn(name = "person_id")
+    private Person person;
 
-    private LocalDateTime date;
+    private String password;
 
+    @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private MovementType movementType;
-
-    private Double amount;
-    private Double balance;
+    private ClientState state = ClientState.ACTIVE;
 
     @CreationTimestamp
     @Column(updatable = false)

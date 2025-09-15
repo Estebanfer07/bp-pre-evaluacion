@@ -1,6 +1,7 @@
-package com.esterodr.domain;
+package com.esterodr.backend.domain;
 
-import com.esterodr.domain.enums.Gender;
+import com.esterodr.backend.domain.enums.Gender;
+
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;

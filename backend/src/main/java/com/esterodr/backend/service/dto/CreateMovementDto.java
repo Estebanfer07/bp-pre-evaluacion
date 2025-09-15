@@ -1,6 +1,7 @@
-package com.esterodr.service.dto;
+package com.esterodr.backend.service.dto;
 
-import com.esterodr.domain.enums.MovementType;
+import com.esterodr.backend.domain.enums.MovementType;
+
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;

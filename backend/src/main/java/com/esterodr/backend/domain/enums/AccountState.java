@@ -1,4 +1,4 @@
-package com.esterodr.domain.enums;
+package com.esterodr.backend.domain.enums;
 
 public enum AccountState {
     ACTIVE,

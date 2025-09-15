@@ -1,6 +1,7 @@
-package com.esterodr.service.dto;
+package com.esterodr.backend.service.dto;
 
-import com.esterodr.domain.enums.Gender;
+import com.esterodr.backend.domain.enums.Gender;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;

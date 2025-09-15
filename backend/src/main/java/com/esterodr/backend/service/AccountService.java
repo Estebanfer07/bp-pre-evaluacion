@@ -1,11 +1,12 @@
-package com.esterodr.service;
+package com.esterodr.backend.service;
 
-import com.esterodr.domain.Account;
-import com.esterodr.service.dto.CreateAccountDto;
-import com.esterodr.service.dto.UpdateAccountDto;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import com.esterodr.backend.domain.Account;
+import com.esterodr.backend.service.dto.CreateAccountDto;
+import com.esterodr.backend.service.dto.UpdateAccountDto;
 
 public interface AccountService {
     Account createAccount(CreateAccountDto dto);

@@ -1,4 +1,4 @@
-package com.esterodr.configuration;
+package com.esterodr.backend.configuration;
 
 import static lombok.AccessLevel.PUBLIC;
 

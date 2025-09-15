@@ -1,6 +1,7 @@
-package com.esterodr.service.dto;
+package com.esterodr.backend.service.dto;
 
-import com.esterodr.domain.enums.MovementType;
+import com.esterodr.backend.domain.enums.MovementType;
+
 import lombok.Data;
 
 @Data
