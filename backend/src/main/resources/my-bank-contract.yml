@@ -4,10 +4,12 @@ info:
   version: 1.0.0
   description: API for managing bank accounts
 servers:
-  - url: /api/accounts
+  - url: /api
 paths:
-  "/":
+  "/accounts":
     get:
+      tags:
+        - Accounts
       summary: Get all accounts
       responses:
         "200":
@@ -19,6 +21,8 @@ paths:
                 items:
                   $ref: "#/components/schemas/Account"
     post:
+      tags:
+        - Accounts
       summary: Create a new account
       requestBody:
         required: true
@@ -33,8 +37,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Account"
-  "/{id}":
+  "/accounts/{id}":
     get:
+      tags:
+        - Accounts
       summary: Get account by ID
       parameters:
         - name: id
@@ -53,6 +59,8 @@ paths:
         "404":
           description: Account not found
     patch:
+      tags:
+        - Accounts
       summary: Update account by ID
       parameters:
         - name: id
@@ -61,6 +69,313 @@ paths:
           schema:
             type: string
             format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateAccountDto"
+      responses:
+        "200":
+          description: Account updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Account"
+        "404":
+          description: Account not found
+    delete:
+      tags:
+        - Accounts
+      summary: Delete account by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Account deleted
+        "404":
+          description: Account not found
+  /clients:
+    get:
+      tags:
+        - Clients
+      summary: Get all clients
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      tags:
+        - Clients
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientWithPersonDto"
+      responses:
+        "200":
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+  /clients/{id}:
+    get:
+      tags:
+        - Clients
+      summary: Get client by ID
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Client found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Client not found
+    patch:
+      tags:
+        - Clients
+      summary: Update client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientWithPersonDto"
+      responses:
+        "200":
+          description: Client updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Client not found
+    delete:
+      tags:
+        - Clients
+      summary: Delete client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Client deleted
+        "404":
+          description: Client not found
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        clientId:
+          type: string
+          format: uuid
+        accountNumber:
+          type: string
+        type:
+          type: string
+          enum:
+            - AHO
+            - CTE
+        state:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateAccountDto:
+      type: object
+      properties:
+        clientId:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum:
+            - AHO
+            - CTE
+        balance:
+          type: number
+          format: double
+      required:
+        - clientId
+        - type
+        - balance
+    UpdateAccountDto:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - AHO
+            - CTE
+        state:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+      required:
+        - type
+        - state
+    Client:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        person:
+          $ref: "#/components/schemas/Person"
+        password:
+          type: string
+        state:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    Person:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        age:
+          type: integer
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateClientWithPersonDto:
+      allOf:
+        - $ref: "#/components/schemas/CreatePersonDto"
+        - type: object
+          properties:
+            password:
+              type: string
+      required:
+        - name
+        - gender
+        - age
+        - identification
+        - address
+        - phone
+        - password
+    UpdateClientWithPersonDto:
+      allOf:
+        - $ref: "#/components/schemas/UpdatePersonDto"
+        - type: object
+          properties:
+            password:
+              type: string
+      required:
+        - password
+    CreatePersonDto:
+      type: object
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        age:
+          type: integer
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+      required:
+        - name
+        - gender
+        - age
+        - identification
+        - address
+        - phone
+    UpdatePersonDto:
+      type: object
+      properties:
+        name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+            - OTHER
+        age:
+          type: integer
+        identification:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
       requestBody:
         required: true
         content:
@@ -90,21 +405,100 @@ paths:
           description: Account deleted
         "404":
           description: Account not found
-components:
-  schemas:
-    Account:
+  /clients:
+    get:
+      summary: Get all clients
+      responses:
+        "200":
+          description: List of clients
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+    post:
+      summary: Create a new client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateClientWithPersonDto"
+      responses:
+        "200":
+          description: Client created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+  /clients/{id}:
+    get:
+      summary: Get client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Client found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Client not found
+    patch:
+      summary: Update client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateClientWithPersonDto"
+      responses:
+        "200":
+          description: Client updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Client not found
+    delete:
+      summary: Delete client by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Client deleted
+        "404":
+          description: Client not found
+    Client:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        accountNumber:
+        person:
+          $ref: "#/components/schemas/Person"
+        password:
           type: string
-        type:
-          type: string
-          enum:
-            - AHO
-            - CTE
         state:
           type: string
           enum:
@@ -116,37 +510,45 @@ components:
         updatedAt:
           type: string
           format: date-time
-    CreateAccountDto:
+    Person:
       type: object
       properties:
-        accountNumber:
+        id:
           type: string
-        type:
+          format: uuid
+        name:
           type: string
-          enum:
-            - AHO
-            - CTE
-        state:
+        gender:
           type: string
           enum:
-            - ACTIVE
-            - INACTIVE
-      required:
-        - type
-        - state
-    UpdateAccountDto:
-      type: object
-      properties:
-        type:
+            - MALE
+            - FEMALE
+            - OTHER
+        age:
+          type: integer
+        identification:
           type: string
-          enum:
-            - AHO
-            - CTE
-        state:
+        address:
           type: string
-          enum:
-            - ACTIVE
-            - INACTIVE
-      required:
-        - type
-        - state
+        phone:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CreateClientWithPersonDto:
+      allOf:
+        - $ref: "#/components/schemas/CreatePersonDto"
+        - type: object
+          properties:
+            password:
+              type: string
+    UpdateClientWithPersonDto:
+      allOf:
+        - $ref: "#/components/schemas/UpdatePersonDto"
+        - type: object
+          properties:
+            password:
+              type: string

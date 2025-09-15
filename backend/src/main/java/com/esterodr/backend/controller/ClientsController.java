@@ -20,7 +20,7 @@ public class ClientsController {
         return ResponseEntity.ok(clientService.createClient(dto));
     }
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updateClient(@PathVariable UUID id, @RequestBody UpdateClientWithPersonDto dto) {
         return ResponseEntity.ok(clientService.updateClient(id, dto));
     }

@@ -1,5 +1,7 @@
 package com.esterodr.backend.service.dto;
 
+import java.util.UUID;
+
 import com.esterodr.backend.domain.enums.AccountType;
 
 import jakarta.validation.constraints.NotNull;
@@ -14,4 +16,7 @@ public class CreateAccountDto {
     @NotNull
     @PositiveOrZero
     private Double balance;
+
+    @NotNull
+    private UUID clientId;
 }

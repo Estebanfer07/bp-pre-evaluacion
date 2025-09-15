@@ -1,9 +1,12 @@
 package com.esterodr.backend.service;
 
-import com.esterodr.backend.repository.ClientRepository;
-import com.esterodr.backend.repository.PersonRepository;
-import com.esterodr.backend.service.dto.CreateClientWithPersonDto;
-import com.esterodr.backend.service.dto.UpdateClientWithPersonDto;
+import com.esterodr.backend.domain.*;
+import com.esterodr.backend.domain.enums.ClientState;
+import com.esterodr.backend.repository.*;
+import com.esterodr.backend.service.dto.*;
+import com.esterodr.backend.util.BeanUtils;
+import com.esterodr.backend.util.SimpleEncryptionUtil;
+import com.esterodr.backend.configuration.ApplicationProperties;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,71 +20,77 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class ClientServiceImpl implements ClientService {
+
+    ApplicationProperties appProperties;
     ClientRepository clientRepository;
     PersonRepository personRepository;
 
     @Override
     public Object createClient(CreateClientWithPersonDto dto) {
-        // Create person
-        com.esterodr.backend.domain.Person person = new com.esterodr.backend.domain.Person();
-        person.setName(dto.getName());
-        person.setGender(dto.getGender());
-        person.setAge(dto.getAge());
-        person.setIdentification(dto.getIdentification());
-        person.setAddress(dto.getAddress());
-        person.setPhone(dto.getPhone());
+        Person person = new Person();
+        BeanUtils.copyNonNullProperties(dto, person);
         person = personRepository.save(person);
 
-        // Create client
-        com.esterodr.backend.domain.Client client = new com.esterodr.backend.domain.Client();
+        Client client = new Client();
         client.setPerson(person);
-        client.setPassword(dto.getPassword());
-        client.setState(dto.getState());
+        BeanUtils.copyNonNullProperties(dto, client);
+
+        if (client.getPassword() != null) {
+            String encrypted = SimpleEncryptionUtil.encrypt(client.getPassword(),
+                    appProperties.getEncryption().getSecretKey());
+            client.setPassword(encrypted);
+        }
+
         client = clientRepository.save(client);
+
+        client.setPassword(null);
         return client;
     }
 
     @Override
-    public Object updateClient(UUID id, UpdateClientWithPersonDto dto) {
-        com.esterodr.backend.domain.Client client = clientRepository.findById(id)
+    public Object updateClient(UUID id, UpdateClientWithPersonDto clientData) {
+        Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
-        com.esterodr.backend.domain.Person person = client.getPerson();
-        if (dto.getName() != null)
-            person.setName(dto.getName());
-        if (dto.getGender() != null)
-            person.setGender(dto.getGender());
-        if (dto.getAge() != null)
-            person.setAge(dto.getAge());
-        if (dto.getIdentification() != null)
-            person.setIdentification(dto.getIdentification());
-        if (dto.getAddress() != null)
-            person.setAddress(dto.getAddress());
-        if (dto.getPhone() != null)
-            person.setPhone(dto.getPhone());
+        Person person = client.getPerson();
+
+        BeanUtils.copyNonNullProperties(clientData, person);
         personRepository.save(person);
-        if (dto.getPassword() != null)
-            client.setPassword(dto.getPassword());
-        if (dto.getState() != null)
-            client.setState(dto.getState());
+
+        BeanUtils.copyNonNullProperties(clientData, client);
+        // Encrypt password before saving
+        if (client.getPassword() != null) {
+            String encrypted = SimpleEncryptionUtil.encrypt(client.getPassword(),
+                    appProperties.getEncryption().getSecretKey());
+            client.setPassword(encrypted);
+        }
         client = clientRepository.save(client);
+
+        client.setPassword(null);
         return client;
     }
 
     @Override
     public void deleteClient(UUID id) {
-        com.esterodr.backend.domain.Client client = clientRepository.findById(id)
+        Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
-        client.setState(com.esterodr.backend.domain.enums.ClientState.INACTIVE);
+        client.setState(ClientState.INACTIVE);
         clientRepository.save(client);
     }
 
     @Override
     public Object getClient(UUID id) {
-        return clientRepository.findById(id).orElseThrow(() -> new RuntimeException("Client not found"));
+        Client client = clientRepository.findByIdAndState(id, ClientState.ACTIVE)
+                .orElseThrow(() -> new RuntimeException("Active client not found"));
+
+        client.setPassword(null);
+        return client;
     }
 
     @Override
     public List<Object> getAllClients() {
-        return new java.util.ArrayList<>(clientRepository.findAll());
+        List<Client> clients = clientRepository.findAllByState(ClientState.ACTIVE);
+
+        clients.forEach(c -> c.setPassword(null));
+        return new java.util.ArrayList<>(clients);
     }
 }
