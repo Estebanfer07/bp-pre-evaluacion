@@ -21,7 +21,7 @@ spring:
     enabled: ${FLYWAY_ENABLED:true}
     locations: ${FLYWAY_LOCATIONS:classpath:db/migration}
     baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
-logging:
-  level:
-    root: WARN
-    com.esterodr.backend: WARN
+
+my-bank:
+  encryption:
+    secret-key: ${MY_BANK_ENCRYPTION_SECRET_KEY:MyS3cretK3yF0rEncrypt10n}
