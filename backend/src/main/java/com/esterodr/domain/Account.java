@@ -11,6 +11,9 @@ import com.esterodr.domain.enums.AccountState;
 import com.esterodr.domain.enums.AccountType;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.Random;
 
@@ -39,4 +42,11 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     private AccountState state;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 }
