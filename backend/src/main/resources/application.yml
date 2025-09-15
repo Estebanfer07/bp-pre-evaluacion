@@ -1,21 +1,21 @@
 spring:
   application:
     name: backend
-    datasource:
-      url: jdbc:postgresql://${DB_DOMAIN:localhost}:${DB_PORT:5432}/${DB_NAME:MyBankDB}
-      username: ${DB_USER:your_db_user}
-      password: ${DB_PASSWORD:your_db_password}
-      driver-class-name: org.postgresql.Driver
+  datasource:
+    url: jdbc:postgresql://${DB_DOMAIN:localhost}:${DB_PORT:5432}/${DB_NAME:MyBankDB}
+    username: ${DB_USER:your_db_user}
+    password: ${DB_PASSWORD:your_db_password}
+    driver-class-name: org.postgresql.Driver
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:validate}
+    show-sql: ${JPA_SHOW_SQL:true}
+    properties:
       hibernate:
-        ddl-auto: ${JPA_DDL_AUTO:validate}
-      show-sql: ${JPA_SHOW_SQL:true}
-      properties:
-        hibernate:
-          dialect: org.hibernate.dialect.PostgreSQLDialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
 
-    flyway:
-      enabled: ${FLYWAY_ENABLED:true}
-      locations: ${FLYWAY_LOCATIONS:classpath:db/migration}
-      baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}
+  flyway:
+    enabled: ${FLYWAY_ENABLED:true}
+    locations: ${FLYWAY_LOCATIONS:classpath:db/migration}
+    baseline-on-migrate: ${FLYWAY_BASELINE_ON_MIGRATE:true}

@@ -1,13 +1,12 @@
-version: "3.8"
 services:
   db:
     image: postgres:16
     container_name: bp_db
     restart: always
     environment:
-      POSTGRES_DB: ${DB_NAME:mybankdb}
-      POSTGRES_USER: ${DB_USER:esterodr}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:MyS3cretP4ss}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -22,21 +21,25 @@ services:
     environment:
       DB_DOMAIN: db
       DB_PORT: 5432
-      DB_NAME: ${DB_NAME:-bp_db}
-      DB_USER: ${DB_USER:-bp_user}
-      DB_PASSWORD: ${DB_PASSWORD:-bp_pass}
-      JPA_SHOW_SQL: "true"
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JPA_SHOW_SQL: ${JPA_SHOW_SQL}
+      JPA_DDL_AUTO: ${JPA_DDL_AUTO}
+      FLYWAY_ENABLED: ${FLYWAY_ENABLED}
+      FLYWAY_LOCATIONS: ${FLYWAY_LOCATIONS}
+      FLYWAY_BASELINE_ON_MIGRATE: ${FLYWAY_BASELINE_ON_MIGRATE}
     ports:
-      - "8080:8080"
+      - "8081:8080"
     restart: always
 
-  frontend:
-    build:
-      context: ./Frontend
-    container_name: bp_frontend
-    ports:
-      - "5173:5173"
-    restart: unless-stopped
+  # frontend:
+  #   build:
+  #     context: ./Frontend
+  #   container_name: bp_frontend
+  #   ports:
+  #     - "5173:5173"
+  #   restart: unless-stopped
 
 volumes:
   pgdata:
