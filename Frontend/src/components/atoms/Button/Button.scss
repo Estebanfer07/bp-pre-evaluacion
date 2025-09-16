@@ -1,0 +1,72 @@
+@use "../../../styles" as *;
+
+.btn {
+  @include button-base;
+
+  @include modifier("primary") {
+    @include button-primary;
+  }
+
+  @include modifier("secondary") {
+    @include button-secondary;
+  }
+
+  @include modifier("outline") {
+    background-color: transparent;
+    color: $text-color;
+    border: 1px solid $border-color;
+
+    &:hover:not(.btn--disabled) {
+      background-color: $background-color-light;
+      border-color: $primary-color;
+    }
+  }
+
+  @include modifier("sm") {
+    padding: $spacing-xs $spacing-sm;
+    font-size: $font-size-sm;
+  }
+
+  @include modifier("lg") {
+    padding: $spacing-md $spacing-lg;
+    font-size: $font-size-lg;
+  }
+
+  @include modifier("disabled") {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  @include modifier("loading") {
+    cursor: default;
+  }
+
+  @include element("spinner") {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid transparent;
+    border-top: 2px solid currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: $spacing-xs;
+  }
+
+  @include element("content") {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include modifier("loading") {
+      opacity: 0.7;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

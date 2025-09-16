@@ -1,0 +1,65 @@
+@use "../styles" as *;
+
+.page {
+  background-color: $background-color;
+  border-radius: $border-radius-lg;
+  box-shadow: $shadow-sm;
+  overflow: hidden;
+
+  @include element("header") {
+    padding: $spacing-lg;
+    border-bottom: 1px solid $border-color-light;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $background-color;
+
+    h1 {
+      margin: 0;
+      color: $text-color;
+      font-size: $font-size-2xl;
+      font-weight: $font-weight-semibold;
+    }
+
+    @media (max-width: #{$breakpoint-sm}) {
+      flex-direction: column;
+      gap: $spacing-md;
+      align-items: stretch;
+    }
+  }
+
+  @include element("content") {
+    padding: $spacing-lg;
+    min-height: 400px;
+
+    @media (max-width: #{$breakpoint-sm}) {
+      padding: $spacing-md;
+    }
+  }
+}
+
+.search-section {
+  margin-bottom: $spacing-lg;
+
+  .search-input {
+    @include input-base;
+    max-width: 400px;
+
+    @media (max-width: #{$breakpoint-sm}) {
+      max-width: 100%;
+    }
+  }
+}
+
+.clients-list,
+.accounts-list,
+.movements-list {
+  color: $text-color-light;
+  font-size: $font-size-base;
+  text-align: center;
+  padding: $spacing-2xl;
+
+  p {
+    margin: 0;
+  }
+}

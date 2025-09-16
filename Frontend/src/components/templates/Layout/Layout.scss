@@ -1,0 +1,30 @@
+@use "../../../styles" as *;
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: $background-color-light;
+
+  @include element("main") {
+    flex: 1;
+    margin-left: 250px; // Sidebar width
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      margin-left: 0;
+      margin-top: auto; // Adjust for mobile sidebar
+    }
+  }
+
+  @include element("content") {
+    flex: 1;
+    padding: $spacing-lg;
+    max-width: 100%;
+    overflow-x: auto;
+
+    @media (max-width: #{$breakpoint-md - 1px}) {
+      padding: $spacing-md;
+    }
+  }
+}

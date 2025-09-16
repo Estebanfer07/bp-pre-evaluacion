@@ -1,0 +1,37 @@
+@use "../../../styles" as *;
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.input-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-color;
+
+  @include element("required") {
+    color: $error-color;
+    margin-left: 2px;
+  }
+}
+
+.input {
+  @include input-base;
+
+  @include modifier("error") {
+    border-color: $error-color;
+
+    &:focus {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+    }
+  }
+}
+
+.input-error {
+  font-size: $font-size-xs;
+  color: $error-color;
+  margin-top: $spacing-xs;
+}

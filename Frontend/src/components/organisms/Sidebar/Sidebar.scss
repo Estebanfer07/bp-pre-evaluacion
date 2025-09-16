@@ -1,0 +1,113 @@
+@use "../../../styles" as *;
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: $background-color;
+  border-right: 1px solid $border-color-light;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: $z-fixed;
+
+  @include element("brand") {
+    padding: $spacing-lg;
+    border-bottom: 1px solid $border-color-light;
+  }
+
+  @include element("logo") {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  @include element("logo-icon") {
+    font-size: $font-size-xl;
+  }
+
+  @include element("logo-text") {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: $text-color;
+    letter-spacing: 1px;
+  }
+
+  @include element("nav") {
+    flex: 1;
+    padding-top: $spacing-md;
+  }
+
+  @include element("menu") {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  @include element("menu-item") {
+    margin-bottom: $spacing-xs;
+  }
+
+  @include element("menu-link") {
+    display: block;
+    padding: $spacing-md $spacing-lg;
+    color: $text-color;
+    text-decoration: none;
+    font-weight: $font-weight-medium;
+    transition: all 0.2s ease-in-out;
+    border-radius: 0 $border-radius-lg $border-radius-lg 0;
+    margin-right: $spacing-md;
+
+    &:hover {
+      background-color: $background-color-light;
+      color: $text-color;
+    }
+
+    @include modifier("active") {
+      background-color: $primary-color;
+      color: $text-color;
+      font-weight: $font-weight-semibold;
+
+      &:hover {
+        background-color: $primary-color;
+      }
+    }
+  }
+
+  // Responsive behavior
+  @include responsive(md) {
+    position: relative;
+    width: 200px;
+  }
+
+  @media (max-width: #{$breakpoint-md - 1px}) {
+    width: 100%;
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid $border-color-light;
+
+    .sidebar__brand {
+      text-align: center;
+    }
+
+    .sidebar__menu {
+      display: flex;
+      justify-content: center;
+      gap: $spacing-sm;
+      flex-wrap: wrap;
+    }
+
+    .sidebar__menu-item {
+      margin-bottom: 0;
+    }
+
+    .sidebar__menu-link {
+      border-radius: $border-radius-md;
+      margin-right: 0;
+      padding: $spacing-sm $spacing-md;
+      font-size: $font-size-sm;
+    }
+  }
+}
