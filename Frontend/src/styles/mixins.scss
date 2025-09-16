@@ -1,4 +1,5 @@
 @use "./variables" as *;
+@use "sass:color";
 
 @mixin element($element) {
   &__#{$element} {
@@ -38,7 +39,7 @@
   color: $text-color;
 
   &:hover:not(:disabled) {
-    background-color: darken($primary-color, 10%);
+    background-color: color.adjust($primary-color, $lightness: -10%);
   }
 }
 
@@ -48,7 +49,7 @@
   color: $text-color-white;
 
   &:hover:not(:disabled) {
-    background-color: lighten($secondary-color, 10%);
+    background-color: color.adjust($secondary-color, $lightness: 10%);
   }
 }
 

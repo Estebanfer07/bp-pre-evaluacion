@@ -25,10 +25,9 @@ describe('SearchInput', () => {
     const input = screen.getByRole('searchbox')
     fireEvent.change(input, { target: { value: 'test search' } })
     
-    // Should not call immediately
+   
     expect(mockOnSearch).not.toHaveBeenCalledWith('test search')
     
-    // Should call after debounce delay
     await waitFor(() => {
       expect(mockOnSearch).toHaveBeenCalledWith('test search')
     }, { timeout: 200 })
@@ -39,13 +38,10 @@ describe('SearchInput', () => {
     
     const input = screen.getByRole('searchbox')
     
-    // Clear button should not be visible initially
     expect(screen.queryByLabelText('Limpiar búsqueda')).not.toBeInTheDocument()
     
-    // Type something
     fireEvent.change(input, { target: { value: 'test' } })
     
-    // Clear button should be visible
     expect(screen.getByLabelText('Limpiar búsqueda')).toBeInTheDocument()
   })
 
@@ -54,17 +50,14 @@ describe('SearchInput', () => {
     
     const input = screen.getByRole('searchbox') as HTMLInputElement
     
-    // Type something
     fireEvent.change(input, { target: { value: 'test' } })
     expect(input.value).toBe('test')
     
-    // Click clear button
     const clearButton = screen.getByLabelText('Limpiar búsqueda')
     fireEvent.click(clearButton)
     
     expect(input.value).toBe('')
     
-    // Should call onSearch with empty string after debounce
     await waitFor(() => {
       expect(mockOnSearch).toHaveBeenCalledWith('')
     }, { timeout: 200 })
@@ -83,7 +76,6 @@ describe('SearchInput', () => {
     const input = screen.getByRole('searchbox')
     expect(input).toBeDisabled()
     
-    // Clear button should not show when disabled
     fireEvent.change(input, { target: { value: 'test' } })
     expect(screen.queryByLabelText('Limpiar búsqueda')).not.toBeInTheDocument()
   })
