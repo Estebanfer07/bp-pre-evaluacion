@@ -14,8 +14,8 @@ import {
   searchMockMovements,
 } from "./index";
 
-const baseUrl =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:8080/api";
+console.log("MSW baseUrl:", baseUrl);
 
 export const handlers = [
   // Clients endpoints
@@ -23,11 +23,25 @@ export const handlers = [
     const url = new URL(req.url);
     const search = url.searchParams.get("search");
 
-    if (search) {
-      return res(ctx.json(searchMockClients(search)));
-    }
+    try {
+      if (search) {
+        const result = res(
+          ctx.status(200),
+          ctx.json(searchMockClients(search)),
+          ctx.set("Content-Type", "application/json")
+        );
+        return result;
+      }
 
-    return res(ctx.json(mockClientListItems));
+      const result = res(
+        ctx.status(200),
+        ctx.json(mockClientListItems),
+        ctx.set("Content-Type", "application/json")
+      );
+      return result;
+    } catch (error) {
+      return res(ctx.status(500), ctx.json({ error: "Internal server error" }));
+    }
   }),
 
   rest.get(`${baseUrl}/clients/:id`, (req, res, ctx) => {

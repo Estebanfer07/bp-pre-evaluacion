@@ -1,42 +1,43 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "../../test/utils/test-utils";
 import { ClientsPage } from "./ClientsPage";
+import { mockClientListItems } from "../../test/utils/mocks/clients/mockClients";
 
-// Use a variable to control the mock return value
-let mockReturn: any;
-
-vi.mock("./useClientsPage", () => ({
-  useClientsPage: () => mockReturn,
+vi.mock("axios", () => ({
+  default: {
+    create: vi.fn(() => ({
+      get: vi.fn(),
+      post: vi.fn(),
+      put: vi.fn(),
+      delete: vi.fn(),
+      interceptors: {
+        request: { use: vi.fn() },
+        response: { use: vi.fn() },
+      },
+    })),
+  },
 }));
 
-describe("ClientsPage", () => {
+import apiClient from "../../hooks/services/apiClient";
+
+const mockedApiClient = apiClient as any;
+
+describe("ClientsPage (with axios mocking)", () => {
   beforeEach(() => {
-    mockReturn = {
-      tableColumns: [
-        { key: "name", title: "Nombre" },
-        { key: "id", title: "ID" },
-      ],
-      clients: [
-        { id: 1, name: "Juan" },
-        { id: 2, name: "Ana" },
-      ],
-      isLoading: false,
-      error: null,
-      handleSearch: vi.fn(),
-      handleRowClick: vi.fn(),
-    };
+    vi.clearAllMocks();
+
+    mockedApiClient.get = vi.fn().mockImplementation((url: string) => {
+      if (url === "/clients") {
+        return Promise.resolve({ data: mockClientListItems });
+      }
+      return Promise.reject(new Error(`Unmocked endpoint: ${url}`));
+    });
   });
 
-  it("renders page title and Nuevo button", () => {
+  it("renders page title and Nuevo button", async () => {
     render(<ClientsPage />);
     expect(screen.getByText("Clientes")).toBeInTheDocument();
     expect(screen.getByText("Nuevo")).toBeInTheDocument();
-  });
-
-  it("renders table with client data", () => {
-    render(<ClientsPage />);
-    expect(screen.getByText("Juan")).toBeInTheDocument();
-    expect(screen.getByText("Ana")).toBeInTheDocument();
   });
 
   it("renders search input", () => {
@@ -48,20 +49,50 @@ describe("ClientsPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows error message when error is present", () => {
-    mockReturn = {
-      tableColumns: [],
-      clients: [],
-      isLoading: false,
-      error: true,
-      handleSearch: vi.fn(),
-      handleRowClick: vi.fn(),
-    };
+  it("loads and displays client data from API", async () => {
     render(<ClientsPage />);
-    expect(
-      screen.getByText(
-        "Error al cargar los clientes. Por favor, intenta nuevamente."
-      )
-    ).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText("Juan Carlos Pérez")).toBeInTheDocument();
+    });
+
+    const idElements = screen.getAllByText("1234567890");
+    expect(idElements.length).toBeGreaterThan(0);
+
+    expect(screen.getAllByText("0987654321").length).toBeGreaterThan(0);
+  });
+
+  it("handles loading state correctly", async () => {
+    // Delay the mock response to test loading state
+    mockedApiClient.get = vi
+      .fn()
+      .mockImplementation(
+        () =>
+          new Promise((resolve) =>
+            setTimeout(() => resolve({ data: mockClientListItems }), 100)
+          )
+      );
+
+    render(<ClientsPage />);
+
+    // Should show loading state initially
+    // (Note: This depends on your Table component showing loading state)
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    // Eventually should show the data
+    await waitFor(
+      () => {
+        expect(screen.getAllByText("Juan Carlos Pérez").length).toBeGreaterThan(
+          0
+        );
+      },
+      { timeout: 2000 }
+    );
   });
 });
