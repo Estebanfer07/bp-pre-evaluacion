@@ -23,14 +23,11 @@ public class PdfRepository {
 
     public String generatePdfReport(Map<String, Object> pdfData) {
         try {
-            // Set up headers
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            // Create request entity
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(pdfData, headers);
 
-            // Call the PDF service
             ResponseEntity<String> response = restTemplate.exchange(
                     applicationProperties.getPdfService().getUrl(),
                     HttpMethod.POST,

@@ -145,11 +145,10 @@ class ClientServiceImplTest {
         try (MockedStatic<BeanUtils> beanUtilsMock = mockStatic(BeanUtils.class);
                 MockedStatic<SimpleEncryptionUtil> encryptionUtilMock = mockStatic(SimpleEncryptionUtil.class)) {
 
-            // Mock BeanUtils to simulate copying password from DTO to Client
             beanUtilsMock.when(() -> BeanUtils.copyNonNullProperties(eq(createClientDto), any(Client.class)))
                     .thenAnswer(invocation -> {
                         Client client = invocation.getArgument(1);
-                        client.setPassword(TEST_PASSWORD); // Simulate copying password from DTO
+                        client.setPassword(TEST_PASSWORD);
                         return null;
                     });
 
