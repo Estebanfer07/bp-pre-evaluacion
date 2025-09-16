@@ -75,14 +75,12 @@
     }
   }
 
-  // Responsive behavior
   @include responsive(md) {
     position: relative;
     width: 200px;
   }
 
   @media (max-width: #{$breakpoint-md - 1px}) {
-    width: 100%;
     height: auto;
     position: relative;
     border-right: none;
@@ -93,7 +91,6 @@
     }
 
     .sidebar__menu {
-      display: flex;
       justify-content: center;
       gap: $spacing-sm;
       flex-wrap: wrap;

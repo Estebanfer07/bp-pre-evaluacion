@@ -1,6 +1,5 @@
 @use "./variables" as *;
 
-// BEM Mixins
 @mixin element($element) {
   &__#{$element} {
     @content;
@@ -13,7 +12,6 @@
   }
 }
 
-// Button Mixins
 @mixin button-base {
   display: inline-flex;
   align-items: center;
@@ -54,7 +52,6 @@
   }
 }
 
-// Form Mixins
 @mixin input-base {
   width: 100%;
   padding: $spacing-sm $spacing-md;
@@ -80,15 +77,6 @@
   }
 }
 
-// Card Mixins
-@mixin card-base {
-  background-color: $background-color;
-  border-radius: $border-radius-lg;
-  box-shadow: $shadow-md;
-  padding: $spacing-lg;
-}
-
-// Responsive Mixins
 @mixin responsive($breakpoint) {
   @if $breakpoint == sm {
     @media (min-width: $breakpoint-sm) {
