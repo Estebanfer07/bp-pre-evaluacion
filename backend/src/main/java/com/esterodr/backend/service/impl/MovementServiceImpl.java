@@ -71,23 +71,42 @@ public class MovementServiceImpl implements MovementService {
     }
 
     @Override
-    public List<Movements> getMovementsByDateRange(LocalDate from, LocalDate to) {
-        LocalDateTime fromDateTime = from.atStartOfDay();
-        LocalDateTime toDateTime = to.atTime(23, 59, 59);
-        return movementRepository.findByDateRangeAndIsReversedFalse(fromDateTime, toDateTime);
-    }
-
-    @Override
-    public Object generateMovementsReport(ReportFormat format, LocalDate from, LocalDate to) {
+    public Object generateMovementsReport(String accountId, ReportFormat format, LocalDate from, LocalDate to) {
         if (from == null || to == null) {
             YearMonth currentMonth = YearMonth.now();
             from = currentMonth.atDay(1);
             to = currentMonth.atEndOfMonth();
         }
 
-        List<Movements> movements = getMovementsByDateRange(from, to);
+        if ("all".equalsIgnoreCase(accountId)) {
+            List<Movements> movements = getMovementsByAccountAndDateRange(null, from, to);
+            return reportService.generateMovementsReport(format, movements, null, from, to);
+        } else {
+            UUID accountUuid;
+            try {
+                accountUuid = UUID.fromString(accountId);
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Invalid account ID format: " + accountId);
+            }
 
-        return reportService.generateMovementsReport(format, movements);
+            Account account = accountRepository.findById(accountUuid)
+                    .orElseThrow(() -> new IllegalArgumentException("Account not found"));
+
+            List<Movements> movements = getMovementsByAccountAndDateRange(accountUuid, from, to);
+            return reportService.generateMovementsReport(format, movements, account, from, to);
+        }
+    }
+
+    private List<Movements> getMovementsByAccountAndDateRange(UUID accountId, LocalDate from, LocalDate to) {
+        LocalDateTime fromDateTime = from.atStartOfDay();
+        LocalDateTime toDateTime = to.atTime(23, 59, 59);
+
+        if (accountId == null) {
+            return movementRepository.findAllByDateRangeAndIsReversedFalseWithClient(fromDateTime, toDateTime);
+        } else {
+            return movementRepository.findByAccountIdAndDateRangeAndIsReversedFalseWithClient(accountId, fromDateTime,
+                    toDateTime);
+        }
     }
 
     @Override

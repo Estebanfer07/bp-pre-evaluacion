@@ -40,14 +40,15 @@ public class MovementsController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
-    public ResponseEntity<Object> getMovements(
+    @GetMapping("/account/{accountId}/report")
+    public ResponseEntity<Object> generateReport(
+            @PathVariable String accountId,
             @RequestParam(defaultValue = "JSON") ReportFormat format,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate to) {
 
-        Object result = movementService.generateMovementsReport(format, from, to);
-        return ResponseEntity.ok(result);
+        Object report = movementService.generateMovementsReport(accountId, format, from, to);
+        return ResponseEntity.ok(report);
     }
 
     @GetMapping("/{id}")
