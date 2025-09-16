@@ -32,7 +32,9 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   callback: T,
   delay: number
 ): T {
-  const [debounceTimer, setDebounceTimer] = useState<number | null>(null);
+  const [debounceTimer, setDebounceTimer] = useState<ReturnType<
+    typeof setTimeout
+  > | null>(null);
 
   const debouncedCallback = ((...args: Parameters<T>) => {
     if (debounceTimer) {
