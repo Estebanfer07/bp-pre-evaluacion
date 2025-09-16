@@ -21,11 +21,10 @@ public class DepositMovementFactory implements MovementFactory {
         Movements movement = new Movements();
         movement.setAccountId(dto.getAccountId());
         movement.setMovementType(MovementType.DEPOSIT);
-        movement.setAmount(Math.abs(dto.getAmount())); // Deposits are positive
+        movement.setAmount(Math.abs(dto.getAmount()));
         movement.setBalance(account.getBalance() + Math.abs(dto.getAmount()));
         movement.setDate(LocalDateTime.now());
 
-        // Update account balance
         account.setBalance(movement.getBalance());
 
         return movement;

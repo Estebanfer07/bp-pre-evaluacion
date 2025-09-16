@@ -8,7 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.esterodr.backend.domain.enums.AccountState;
 import com.esterodr.backend.domain.enums.AccountType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -58,7 +58,7 @@ public class Account {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany(mappedBy = "account")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Movements> movements;
 }

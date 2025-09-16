@@ -1,7 +1,7 @@
 package com.esterodr.backend.domain;
 
 import com.esterodr.backend.domain.enums.ClientState;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,8 +27,8 @@ public class Client {
 
     private String password;
 
-    @OneToMany(mappedBy = "client")
-    @JsonManagedReference
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Account> accounts;
 
     @Column(name = "state")

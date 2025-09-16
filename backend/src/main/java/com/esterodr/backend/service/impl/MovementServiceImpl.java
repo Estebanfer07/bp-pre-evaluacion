@@ -52,6 +52,20 @@ public class MovementServiceImpl implements MovementService {
         movementRepository.findByIdAndIsReversedFalse(id)
                 .ifPresent(movement -> {
                     movement.setReversed(true);
+                    Account account = accountRepository.findById(movement.getAccountId())
+                            .orElseThrow(() -> new IllegalArgumentException("Account not found for movement reversal"));
+                    switch (movement.getMovementType()) {
+                        case DEPOSIT:
+                            account.setBalance(account.getBalance() - movement.getAmount());
+                            break;
+                        case WITHDRAWAL:
+                        case TRANSFER:
+                            account.setBalance(account.getBalance() + movement.getAmount());
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unknown movement type for reversal");
+                    }
+                    accountRepository.save(account);
                     movementRepository.save(movement);
                 });
     }
@@ -65,17 +79,14 @@ public class MovementServiceImpl implements MovementService {
 
     @Override
     public Object generateMovementsReport(ReportFormat format, LocalDate from, LocalDate to) {
-        // If dates are null, default to current month
         if (from == null || to == null) {
             YearMonth currentMonth = YearMonth.now();
             from = currentMonth.atDay(1);
             to = currentMonth.atEndOfMonth();
         }
 
-        // Query movements for the date range
         List<Movements> movements = getMovementsByDateRange(from, to);
 
-        // Delegate to ReportService to generate the report
         return reportService.generateMovementsReport(format, movements);
     }
 
