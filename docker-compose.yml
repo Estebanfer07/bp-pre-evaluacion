@@ -20,7 +20,7 @@ services:
       - db
     environment:
       SERVER_PORT: ${SERVER_PORT}
-      DB_DOMAIN: db
+      DB_DOMAIN: ${DB_DOMAIN}
       DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
@@ -33,7 +33,7 @@ services:
       MY_BANK_ENCRYPTION_SECRET_KEY: ${MY_BANK_ENCRYPTION_SECRET_KEY}
       PDF_SERVICE_URL: ${PDF_SERVICE_URL}
     ports:
-      - "8081:8080"
+      - "${EXPOSED_PORT}:${SERVER_PORT}"
     restart: always
 
   reporter:
