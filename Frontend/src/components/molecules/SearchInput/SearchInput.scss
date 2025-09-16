@@ -1,0 +1,71 @@
+@use "../../../styles" as *;
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+
+  @include element("container") {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  @include element("icon") {
+    position: absolute;
+    left: $spacing-md;
+    z-index: 1;
+    color: $text-color-light;
+    font-size: $font-size-base;
+    pointer-events: none;
+  }
+
+  @include element("field") {
+    width: 100%;
+    padding-left: calc(#{$spacing-md} + 1.5rem);
+    padding-right: calc(#{$spacing-md} + 1.5rem);
+
+    &:focus {
+      + .search-input__clear {
+        opacity: 1;
+      }
+    }
+
+    .input-wrapper {
+      margin: 0;
+    }
+
+    .input-label {
+      display: none;
+    }
+  }
+
+  @include element("clear") {
+    position: absolute;
+    right: $spacing-md;
+    z-index: 1;
+    background: none;
+    border: none;
+    color: $text-color-light;
+    font-size: $font-size-sm;
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: $border-radius-sm;
+    opacity: 0.7;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      opacity: 1;
+      background-color: $background-color-light;
+      color: $text-color;
+    }
+
+    &:focus {
+      outline: 2px solid $primary-color;
+      outline-offset: 2px;
+    }
+  }
+
+  @media (max-width: #{$breakpoint-sm}) {
+    max-width: 100%;
+  }
+}

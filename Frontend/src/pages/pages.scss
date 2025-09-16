@@ -40,15 +40,6 @@
 
 .search-section {
   margin-bottom: $spacing-lg;
-
-  .search-input {
-    @include input-base;
-    max-width: 400px;
-
-    @media (max-width: #{$breakpoint-sm}) {
-      max-width: 100%;
-    }
-  }
 }
 
 .clients-list,

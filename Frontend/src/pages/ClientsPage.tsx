@@ -1,8 +1,12 @@
-import React from 'react';
-import { Button } from '../components';
+import React, { useCallback } from 'react';
+import { Button, SearchInput } from '../components';
 import './pages.scss';
 
 export const ClientsPage: React.FC = () => {
+  const handleSearch = useCallback((query: string) => {
+    console.log('Searching for:', query);
+  }, []);
+
   return (
     <div className="page">
       <div className="page__header">
@@ -11,10 +15,10 @@ export const ClientsPage: React.FC = () => {
       </div>
       <div className="page__content">
         <div className="search-section">
-          <input
-            type="text"
-            placeholder="Buscar"
-            className="search-input"
+          <SearchInput
+            placeholder="Buscar clientes..."
+            onSearch={handleSearch}
+            debounceDelay={300}
           />
         </div>
         <div className="clients-list">
