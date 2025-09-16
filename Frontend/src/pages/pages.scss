@@ -1,4 +1,5 @@
 @use "../styles" as *;
+@use "sass:color";
 
 .page {
   background-color: $background-color;
@@ -36,10 +37,97 @@
       padding: $spacing-md;
     }
   }
+
+  @include element("filter-info") {
+    padding: $spacing-md $spacing-lg;
+    background-color: $primary-50;
+    border-bottom: 1px solid $border-color-light;
+
+    .filter-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: $spacing-md;
+
+      &__text {
+        color: $text-color;
+        font-size: $font-size-sm;
+      }
+
+      @media (max-width: #{$breakpoint-sm}) {
+        flex-direction: column;
+        align-items: stretch;
+        gap: $spacing-sm;
+      }
+    }
+  }
+
+  @include element("search") {
+    margin-bottom: $spacing-lg;
+  }
+
+  @include element("table") {
+    margin-top: $spacing-md;
+  }
 }
 
 .search-section {
   margin-bottom: $spacing-lg;
+}
+
+.search-input {
+  width: 100%;
+  padding: $spacing-md;
+  border: 1px solid $border-color-light;
+  border-radius: $border-radius-md;
+  font-size: $font-size-base;
+  color: $text-color;
+  background-color: $background-color;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+  }
+
+  &::placeholder {
+    color: $text-color-light;
+  }
+}
+
+.account-filter {
+  margin-top: $spacing-md;
+  padding: $spacing-md;
+  background-color: $primary-50;
+  border-radius: $border-radius-md;
+  border: 1px solid $primary-100;
+
+  p {
+    margin: 0;
+    font-size: $font-size-sm;
+    color: $text-color;
+  }
+
+  .clear-filter-btn {
+    margin-left: $spacing-md;
+    padding: $spacing-xs $spacing-sm;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $border-radius-sm;
+    font-size: $font-size-xs;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: color.adjust($secondary-color, $lightness: 10%);
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($primary-color, 0.3);
+    }
+  }
 }
 
 .clients-list,
@@ -80,6 +168,96 @@
     background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
+  }
+
+  &--activa {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &--inactiva {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+}
+
+.account-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: $border-radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+
+  &--aho {
+    background-color: #e1f5fe;
+    color: #0277bd;
+    border: 1px solid #b3e5fc;
+  }
+
+  &--cte {
+    background-color: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid #ffcc02;
+  }
+}
+
+.balance {
+  font-weight: $font-weight-semibold;
+  font-family: "Monaco", "Menlo", monospace;
+
+  &.negative {
+    color: #d32f2f;
+  }
+}
+
+.movement-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: $border-radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+
+  &--deposit {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &--withdrawal {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  &--transfer {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+  }
+}
+
+.amount {
+  font-weight: $font-weight-semibold;
+  font-family: "Monaco", "Menlo", monospace;
+
+  &.deposit {
+    color: #155724;
+  }
+
+  &.withdrawal {
+    color: #721c24;
+  }
+
+  &.transfer {
+    color: #856404;
   }
 }
 
