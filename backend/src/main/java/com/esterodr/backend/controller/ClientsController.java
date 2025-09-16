@@ -2,6 +2,9 @@ package com.esterodr.backend.controller;
 
 import com.esterodr.backend.service.dto.CreateClientWithPersonDto;
 import com.esterodr.backend.service.dto.UpdateClientWithPersonDto;
+
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +19,12 @@ public class ClientsController {
     private ClientService clientService;
 
     @PostMapping
-    public ResponseEntity<?> createClient(@RequestBody CreateClientWithPersonDto dto) {
+    public ResponseEntity<?> createClient(@Valid @RequestBody CreateClientWithPersonDto dto) {
         return ResponseEntity.ok(clientService.createClient(dto));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateClient(@PathVariable UUID id, @RequestBody UpdateClientWithPersonDto dto) {
+    public ResponseEntity<?> updateClient(@PathVariable UUID id, @Valid @RequestBody UpdateClientWithPersonDto dto) {
         return ResponseEntity.ok(clientService.updateClient(id, dto));
     }
 
