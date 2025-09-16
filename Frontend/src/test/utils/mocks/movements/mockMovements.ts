@@ -1,4 +1,9 @@
-import type { Movement, MovementListItem } from "../../../../types/movements";
+import type {
+  Movement,
+  MovementListItem,
+  MovementReportItem,
+  JsonReportResponse,
+} from "../../../../types/movements";
 
 export const mockMovements: Movement[] = [
   {
@@ -376,4 +381,30 @@ export const getRecentMockMovements = (): MovementListItem[] => {
   return mockMovementListItems
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
     .slice(0, 10);
+};
+
+// Mock API report response format
+export const getMockJsonReportResponse = (
+  accountId?: string
+): JsonReportResponse => {
+  let movements = mockMovementListItems;
+
+  if (accountId && accountId !== "all") {
+    movements = movements.filter(
+      (movement) => movement.accountId === accountId
+    );
+  }
+
+  const jsonReport: MovementReportItem[] = movements.map((movement) => ({
+    date: movement.date,
+    amount: movement.amount,
+    clientId: movement.accountId, // Using accountId as clientId for mock
+    balance: movement.balance,
+    clientName: movement.clientName || "Unknown Client",
+    id: movement.id,
+    type: movement.movementType,
+    accountNumber: movement.accountNumber || "Unknown Account",
+  }));
+
+  return { jsonReport };
 };

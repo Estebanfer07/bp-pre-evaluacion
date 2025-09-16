@@ -103,6 +103,32 @@ export const ReportFormSchema = z.object({
 export type MovementForm = z.infer<typeof MovementFormSchema>;
 export type ReportForm = z.infer<typeof ReportFormSchema>;
 
+// Report response types
+export const MovementReportItemSchema = z.object({
+  date: z.string(),
+  amount: z.number(),
+  clientId: z.string(),
+  balance: z.number(),
+  clientName: z.string(),
+  id: z.string(),
+  type: MovementTypeSchema,
+  accountNumber: z.string(),
+});
+
+export type MovementReportItem = z.infer<typeof MovementReportItemSchema>;
+
+export const JsonReportResponseSchema = z.object({
+  jsonReport: z.array(MovementReportItemSchema),
+});
+
+export type JsonReportResponse = z.infer<typeof JsonReportResponseSchema>;
+
+export const PdfReportResponseSchema = z.object({
+  pdfReport: z.string(), // Base64 encoded PDF
+});
+
+export type PdfReportResponse = z.infer<typeof PdfReportResponseSchema>;
+
 export const MOVEMENT_TYPE_LABELS: Record<MovementType, string> = {
   DEPOSIT: "Depósito",
   WITHDRAWAL: "Retiro",

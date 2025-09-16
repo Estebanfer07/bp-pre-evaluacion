@@ -5,7 +5,9 @@ import type {
   Movement,
   MovementListItem,
   CreateMovement,
-  UpdateMovement,
+  JsonReportResponse,
+  PdfReportResponse,
+  MovementReportItem,
 } from "../../types/movements";
 
 export const useMovementsQueries = () => {
@@ -30,16 +32,33 @@ export const useMovementsQueries = () => {
       queryKey: ["movements", accountId, startDate, endDate],
       queryFn: async (): Promise<MovementListItem[]> => {
         try {
-          const params: any = {};
-          if (accountId) params.accountId = accountId;
-          if (startDate) params.startDate = startDate;
-          if (endDate) params.endDate = endDate;
+          const accountParam = accountId || "all";
+          const params: any = {
+            format: "JSON",
+          };
 
-          const response = await apiClient.get<MovementListItem[]>(
-            "/movements",
+          if (startDate) params.from = startDate;
+          if (endDate) params.to = endDate;
+
+          const response = await apiClient.get<JsonReportResponse>(
+            `/movements/account/${encodeURIComponent(accountParam)}/report`,
             { params }
           );
-          return response.data;
+
+          return response.data.jsonReport.map(
+            (item: MovementReportItem): MovementListItem => ({
+              id: item.id,
+              accountId: item.accountNumber,
+              accountNumber: item.accountNumber,
+              clientName: item.clientName,
+              date: item.date,
+              movementType: item.type,
+              amount: item.amount,
+              balance: item.balance,
+              isReversed: false,
+              createdAt: item.date,
+            })
+          );
         } catch (error) {
           handleError(error as AxiosError, "fetch movements");
           throw error;
@@ -80,50 +99,6 @@ export const useMovementsQueries = () => {
     });
   };
 
-  const useGetMovementsByAccount = (accountId: string) => {
-    return useQuery({
-      queryKey: ["movements", "account", accountId],
-      queryFn: async (): Promise<MovementListItem[]> => {
-        try {
-          const response = await apiClient.get<MovementListItem[]>(
-            "/movements",
-            {
-              params: { accountId },
-            }
-          );
-          return response.data;
-        } catch (error) {
-          handleError(error as AxiosError, "fetch account movements");
-          throw error;
-        }
-      },
-      enabled: !!accountId,
-      staleTime: 1000 * 60 * 2,
-    });
-  };
-
-  const useGetMovementsByDateRange = (startDate: string, endDate: string) => {
-    return useQuery({
-      queryKey: ["movements", "dateRange", startDate, endDate],
-      queryFn: async (): Promise<MovementListItem[]> => {
-        try {
-          const response = await apiClient.get<MovementListItem[]>(
-            "/movements",
-            {
-              params: { startDate, endDate },
-            }
-          );
-          return response.data;
-        } catch (error) {
-          handleError(error as AxiosError, "fetch movements by date range");
-          throw error;
-        }
-      },
-      enabled: !!startDate && !!endDate,
-      staleTime: 1000 * 60 * 5,
-    });
-  };
-
   const useCreateMovement = () => {
     return useMutation({
       mutationFn: async (movementData: CreateMovement): Promise<Movement> => {
@@ -142,37 +117,6 @@ export const useMovementsQueries = () => {
         queryClient.invalidateQueries({ queryKey: ["movements"] });
         queryClient.invalidateQueries({ queryKey: ["accounts"] });
         alert("Movement created successfully!");
-      },
-    });
-  };
-
-  const useUpdateMovement = () => {
-    return useMutation({
-      mutationFn: async ({
-        id,
-        data,
-      }: {
-        id: string;
-        data: UpdateMovement;
-      }): Promise<Movement> => {
-        try {
-          const response = await apiClient.put<Movement>(
-            `/movements/${id}`,
-            data
-          );
-          return response.data;
-        } catch (error) {
-          handleError(error as AxiosError, "update movement");
-          throw error;
-        }
-      },
-      onSuccess: (_, variables) => {
-        queryClient.invalidateQueries({ queryKey: ["movements"] });
-        queryClient.invalidateQueries({
-          queryKey: ["movements", variables.id],
-        });
-        queryClient.invalidateQueries({ queryKey: ["accounts"] });
-        alert("Movement updated successfully!");
       },
     });
   };
@@ -205,11 +149,27 @@ export const useMovementsQueries = () => {
         accountId?: string;
       }) => {
         try {
-          const response = await apiClient.post(
-            "/reports/movements",
-            reportData
-          );
-          return response.data;
+          const accountParam = reportData.accountId || "all";
+          const params: any = {
+            format: reportData.format,
+          };
+
+          if (reportData.startDate) params.from = reportData.startDate;
+          if (reportData.endDate) params.to = reportData.endDate;
+
+          if (reportData.format === "PDF") {
+            const response = await apiClient.get<PdfReportResponse>(
+              `/movements/account/${encodeURIComponent(accountParam)}/report`,
+              { params }
+            );
+            return response.data.pdfReport;
+          } else {
+            const response = await apiClient.get<{ excelReport: string }>(
+              `/movements/account/${encodeURIComponent(accountParam)}/report`,
+              { params }
+            );
+            return response.data.excelReport;
+          }
         } catch (error) {
           handleError(error as AxiosError, "generate movement report");
           throw error;
@@ -224,10 +184,7 @@ export const useMovementsQueries = () => {
   return {
     useGetMovements,
     useGetMovement,
-    useGetMovementsByAccount,
-    useGetMovementsByDateRange,
     useCreateMovement,
-    useUpdateMovement,
     useDeleteMovement,
     useGenerateMovementReport,
   };
