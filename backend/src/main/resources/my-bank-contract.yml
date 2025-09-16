@@ -195,47 +195,6 @@ paths:
         "404":
           description: Client not found
   /movements:
-    get:
-      tags:
-        - Movements
-      summary: Get movements report
-      parameters:
-        - name: format
-          in: query
-          required: false
-          schema:
-            type: string
-            enum:
-              - JSON
-              - PDF
-            default: JSON
-          description: Report format
-        - name: from
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-          description: Start date for movements filter (defaults to current month start)
-        - name: to
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-          description: End date for movements filter (defaults to current month end)
-      responses:
-        "200":
-          description: Movements report
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - type: array
-                    items:
-                      $ref: "#/components/schemas/Movement"
-                  - type: object
-                    description: PDF report data
     post:
       tags:
         - Movements
@@ -292,6 +251,80 @@ paths:
           description: Movement deleted (reversed)
         "404":
           description: Movement not found
+
+  /movements/account/{accountId}/report:
+    get:
+      tags:
+        - Movements
+      summary: Generate movement report for account or all accounts
+      parameters:
+        - name: accountId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Account UUID or "all" for all accounts report
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [JSON, PDF]
+            default: JSON
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Start date for movements filter (defaults to current month start)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: End date for movements filter (defaults to current month end)
+      responses:
+        "200":
+          description: Movements report
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jsonReport:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        amount:
+                          type: number
+                        type:
+                          type: string
+                        date:
+                          type: string
+                          format: date-time
+                        balance:
+                          type: number
+                        accountNumber:
+                          type: string
+                        clientName:
+                          type: string
+                        clientId:
+                          type: string
+                  pdfReport:
+                    type: string
+                    format: binary
+                    example: base64-encoded-pdf-content
+        "400":
+          description: Bad request (invalid account ID)
+        "404":
+          description: Account not found
 
 components:
   schemas:

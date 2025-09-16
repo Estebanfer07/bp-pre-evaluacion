@@ -13,11 +13,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ApplicationProperties {
 
     Encryption encryption;
+    PdfService pdfService;
 
     @Data
     @FieldDefaults(level = PUBLIC)
     public static class Encryption {
         String secretKey;
+    }
+
+    @Data
+    @FieldDefaults(level = PUBLIC)
+    public static class PdfService {
+        String url;
     }
 
 }

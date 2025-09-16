@@ -2,6 +2,9 @@ package com.esterodr.backend.strategy.report;
 
 import com.esterodr.backend.domain.Account;
 import com.esterodr.backend.domain.Movements;
+import com.esterodr.backend.repository.PdfRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -12,10 +15,34 @@ import java.util.List;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
+@Slf4j
 public class PdfReportStrategy implements ReportStrategy {
+
+    private final PdfRepository pdfRepository;
 
     @Override
     public Object generateReport(List<Movements> movements, Account account,
+            LocalDate from, LocalDate to) {
+        Map<String, Object> pdfData = buildPdfData(movements, account, from, to);
+
+        try {
+            String base64Pdf = pdfRepository.generatePdfReport(pdfData);
+
+            // Wrap the base64 response
+            Map<String, String> response = new HashMap<>();
+            response.put("pdfReport", base64Pdf);
+
+            log.info("PDF report generated successfully for {} movements", movements.size());
+            return response;
+
+        } catch (Exception e) {
+            log.error("Error generating PDF report: {}", e.getMessage());
+            throw new RuntimeException("Failed to generate PDF report: " + e.getMessage());
+        }
+    }
+
+    private Map<String, Object> buildPdfData(List<Movements> movements, Account account,
             LocalDate from, LocalDate to) {
         Map<String, Object> pdfData = new HashMap<>();
         pdfData.put("generatedAt", LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
@@ -82,7 +109,7 @@ public class PdfReportStrategy implements ReportStrategy {
             formatted.put("accountNumber", movement.getAccount().getAccountNumber());
             if (movement.getAccount().getClient() != null && movement.getAccount().getClient().getPerson() != null) {
                 formatted.put("clientName", movement.getAccount().getClient().getPerson().getName());
-                formatted.put("clientId", movement.getAccount().getClient().getId());
+                formatted.put("clientId", movement.getAccount().getClient().getPerson().getIdentification());
             }
         }
 

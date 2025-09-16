@@ -19,8 +19,9 @@ services:
     depends_on:
       - db
     environment:
+      SERVER_PORT: ${SERVER_PORT}
       DB_DOMAIN: db
-      DB_PORT: 5432
+      DB_PORT: ${DB_PORT}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
@@ -29,6 +30,8 @@ services:
       FLYWAY_ENABLED: ${FLYWAY_ENABLED}
       FLYWAY_LOCATIONS: ${FLYWAY_LOCATIONS}
       FLYWAY_BASELINE_ON_MIGRATE: ${FLYWAY_BASELINE_ON_MIGRATE}
+      MY_BANK_ENCRYPTION_SECRET_KEY: ${MY_BANK_ENCRYPTION_SECRET_KEY}
+      PDF_SERVICE_URL: ${PDF_SERVICE_URL}
     ports:
       - "8081:8080"
     restart: always

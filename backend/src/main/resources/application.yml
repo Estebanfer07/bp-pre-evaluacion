@@ -1,5 +1,5 @@
 server:
-  port: 8082
+  port: ${SERVER_PORT:8082}
 spring:
   application:
     name: backend
@@ -25,3 +25,5 @@ spring:
 my-bank:
   encryption:
     secret-key: ${MY_BANK_ENCRYPTION_SECRET_KEY:MyS3cretK3yF0rEncrypt10n}
+  pdf-service:
+    url: ${PDF_SERVICE_URL:http://localhost:8083/api/pdf/movements}
