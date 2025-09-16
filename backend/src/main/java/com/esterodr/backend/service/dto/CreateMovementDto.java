@@ -1,26 +1,22 @@
 package com.esterodr.backend.service.dto;
 
 import com.esterodr.backend.domain.enums.MovementType;
-
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Positive;
 import lombok.Data;
+
+import java.util.UUID;
 
 @Data
 public class CreateMovementDto {
-    @NotNull
-    private String accountId;
 
-    @NotNull
+    @NotNull(message = "Account ID is required")
+    private UUID accountId;
+
+    @NotNull(message = "Movement type is required")
     private MovementType movementType;
 
-    @NotNull
-    @PositiveOrZero
+    @NotNull(message = "Amount is required")
+    @Positive(message = "Amount must be positive")
     private Double amount;
-
-    @NotNull
-    private Double balance;
-
-    @NotNull
-    private String date;
 }
