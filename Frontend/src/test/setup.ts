@@ -1,9 +1,25 @@
 import "@testing-library/jest-dom";
-import { beforeEach, vi } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, vi } from "vitest";
+import { server } from "./utils/mocks/server";
+import { cleanup } from "@testing-library/react";
+import { queryClient } from "../lib/queryClient";
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
+
+beforeAll(() => {
+  window.alert = vi.fn();
+  server.listen();
+});
+
+afterEach(() => {
+  server.resetHandlers();
+  queryClient.clear();
+  cleanup();
+});
+
+afterAll(() => server.close());
 
 Object.defineProperty(window, "matchMedia", {
   writable: true,
