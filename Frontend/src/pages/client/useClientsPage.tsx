@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import type { TableColumn } from "../../components";
 import { useClientsQueries } from "../../hooks";
 import { useClientsStore } from "../../store";

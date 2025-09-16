@@ -108,7 +108,6 @@
         text-align: right;
       }
 
-      // Handle components and complex content
       > * {
         vertical-align: middle;
       }
@@ -125,7 +124,6 @@
   }
 }
 
-// Responsive behavior
 @media (max-width: 768px) {
   .table-container {
     .table {
