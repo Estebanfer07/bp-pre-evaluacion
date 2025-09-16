@@ -1,6 +1,7 @@
 package com.esterodr.backend.domain;
 
 import com.esterodr.backend.domain.enums.MovementType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,8 +20,12 @@ public class Movements {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id")
+    @Column(name = "account_id", nullable = false)
+    private UUID accountId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    @JsonBackReference
     private Account account;
 
     private LocalDateTime date;
@@ -37,4 +42,7 @@ public class Movements {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Column(name = "is_reversed", nullable = false)
+    private boolean isReversed = false;
 }

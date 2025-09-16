@@ -7,9 +7,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.esterodr.backend.domain.enums.AccountState;
 import com.esterodr.backend.domain.enums.AccountType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.List;
 import java.util.Random;
 
 @Data
@@ -21,8 +24,12 @@ public class Account {
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id")
+    @Column(name = "client_id", nullable = false)
+    private UUID clientId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "client_id", insertable = false, updatable = false)
+    @JsonBackReference
     private Client client;
 
     @Column(name = "account_number", length = 12)
@@ -50,4 +57,8 @@ public class Account {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToMany(mappedBy = "account")
+    @JsonManagedReference
+    private List<Movements> movements;
 }
