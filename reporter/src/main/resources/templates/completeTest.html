@@ -1,0 +1,60 @@
+<html>
+<head>
+    <title>Sample HTML</title>
+    <style>
+      @page {
+        size: {{width}}px {{height}}px;
+        margin: 0;
+      }
+      body {
+        font-size: 16px;
+        font-family: "Playwrite SK", Arial, sans-serif; // Use the registered font name
+        margin: 0;
+        padding: 0;
+      }
+      .test {
+        font-size: 30px;
+        color: red;
+        font-family: "Times New Roman", Arial, sans-serif;
+      }
+    </style>
+</head>
+<body>
+<img height="50px" width="50px" src="data:image/png;base64,{{myImage}}" />
+<h1 class="test">Hello, OpenPDF!</h1>
+<p>This is a paragraph in the generated PDF.</p>
+<p>{{text}}</p>
+<p>{{float}}</p>
+<p>{{integer}}</p>
+{{myArrayStart}}
+<p>{{myArrayItem}}</p>
+{{myArrayEnd}}
+{{myMapArrayStart}}
+<ul>
+    <li>{{name}}</li>
+    <li>{{lastName}}</li>
+
+
+    {{nestedArrayStart}} [1,2,3]
+
+        <li>{{nestedArrayItem}}</li>
+
+    {{nestedArrayEnd}}
+
+
+    {{if name === Esteban}}
+    <li>Muestra condicional 1</li>
+    {{endif}}
+    {{if name !== Esteban}}
+    <li>Muestra condicional 2</li>
+    {{endif}}
+    {{if name !== undefined}}
+    <li>Muestra condicional 3</li>
+    {{endif}}
+    {{if lastName !== undefined}}
+    <li>Muestra condicional 4</li>
+    {{endif}}
+</ul>
+{{myMapArrayEnd}}
+</body>
+</html>

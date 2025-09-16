@@ -1,0 +1,269 @@
+<html>
+<head>
+    <style>
+                    @page {
+                      size: 21cm 29.7cm;
+                      @bottom-left {
+                        content: "Page " counter(page) " of " counter(pages);
+                      }
+                      @top-center {
+                        content: element(header);
+                      }
+                    }
+                    body {
+                      background: white;
+                      display: block;
+                      margin: 0 auto;
+                      margin-bottom: 0.5cm;
+                      font-family: "Arial";
+                      font-size: 10pt;
+                      padding: 0;
+                    }
+                    div.header {
+                      display: block;
+                      position: running(header);
+                    }
+                    table {
+                      -fs-table-paginate: paginate;
+                      width: 100%;
+                      font-family: "Arial";
+                      font-size: 10pt;
+                      border-collapse: collapse;
+                      page-break-inside: auto;
+                    }
+                    thead {
+                      display: table-header-group;
+                    }
+                    /* tfoot {
+                        display: table-footer-group;
+                    } */
+                    tr {
+                      page-break-inside: avoid;
+                      page-break-after: auto;
+                      outline: thin solid;
+                    }
+                    td, th {
+                      border: 1px solid;
+                      padding: 3px;
+                    }
+                    .center {
+                      text-align: center;
+                    }
+                    .w-45 {
+                      width: 45%;
+                    }
+                    .no-outline {
+                      outline: none;
+                    }
+                  </style>
+</head>
+<body>
+<div class="header">
+    <h1>This is a header</h1>
+</div>
+<br />
+<br />
+<p class="center">
+    <strong>CERTIFICADO DE CRÉDITO WEB (CANALES ELECTRÓNICOS)</strong>
+</p>
+<br />
+<br />
+s
+<table cellspacing="0" cellpadding="3">
+    <thead>
+    <tr>
+        <th class="w-45">Cabecera 1</th>
+        <th colspan="2">Cabecera 2</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td class="w-45">
+            <p><strong>Nombre del Cliente:</strong></p>
+        </td>
+        <td colspan="2">{0}</td>
+    </tr>
+    <tr>
+        <td>
+            <p><strong>No. Identificación </strong></p>
+        </td>
+        <td colspan="2">{1}</td>
+    </tr>
+    <tr>
+        <td>
+            <p><strong>Medio Utilizado</strong></p>
+        </td>
+        <td colspan="2">
+            <p>WEB</p>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="3" class="center">
+            <p><strong>DATOS CRÉDITO CONCEDIDO</strong></p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p><strong>Nro. de cuenta:</strong></p>
+        </td>
+        <td colspan="2">{2}</td>
+    </tr>
+    <tr>
+        <td>
+            <p><strong>Fecha de concesión del Crédito:</strong></p>
+        </td>
+        <td colspan="2">{3}</td>
+    </tr>
+    <tr>
+        <td>
+            <p><strong>Hora de desembolso del Crédito:</strong></p>
+        </td>
+        <td colspan="2">{4}</td>
+    </tr>
+    <tr>
+        <td>
+            <p><strong>Monto Solicitado:</strong></p>
+        </td>
+        <td colspan="2">{5}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>Monto Acreditado en la cuenta:</p>
+        </td>
+        <td colspan="2">{6}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>SOLCA</p>
+        </td>
+        <td colspan="2">{7}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>
+                Tasa de interés activa efectiva referencial del segmento (BCE):
+            </p>
+        </td>
+        <td colspan="2">{8}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>TASA DE INTERÉS NOMINAL</p>
+        </td>
+        <td colspan="2">{9}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>TASA DE INTERÉS EFECTIVA</p>
+        </td>
+        <td colspan="2">{10}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>TIPO DE TASA</p>
+        </td>
+        <td colspan="2">
+            <p>reajustable trimestralmente</p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p>Costo del seguro de desgravamen</p>
+        </td>
+        <td colspan="2">{11}</td>
+    </tr>
+    <tr>
+        <td>
+            <p>TIPO DE AMORTIZACIÓN</p>
+        </td>
+        <td colspan="2">{12}</td>
+    </tr>
+    <tr>
+        <td width="50%">
+            <p>Tasa de Mora</p>
+        </td>
+        <td valign="top" width="100%" style="border: 0">
+            <strong style="font-size: 9pt">
+                DE ACUERDO A LA SIGUIENTE TABLA, QUE CORRESPONDE A LA REGULACIÓN
+                051-2013 DEL DIRECTORIO BANCO CENTRAL:
+            </strong>
+            <br />
+            <table cellspacing="0" cellpadding="2" border="0">
+                <tbody align="center">
+                <tr style="font-size: 8pt">
+                    <th valign="top">
+                        <p>DIAS DE MOROSIDAD</p>
+                    </th>
+                    <th valign="top">
+                        <p>RECARGO POR MOROSIDAD HASTA</p>
+                    </th>
+                </tr>
+                <tr>
+                    <td valign="top">0</td>
+                    <td valign="top">0.0%</td>
+                </tr>
+                <tr>
+                    <td valign="top">1-15</td>
+                    <td valign="top">5.0%</td>
+                </tr>
+                <tr>
+                    <td valign="top">16-30</td>
+                    <td valign="top">7.0%</td>
+                </tr>
+                <tr>
+                    <td valign="top">31-60</td>
+                    <td valign="top">9.0%</td>
+                </tr>
+                <tr>
+                    <td valign="top">61-999999</td>
+                    <td valign="top">10.0%</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    </tbody>
+    <tfoot>
+    <tr>
+        <th>Table Footer</th>
+        <td>Table Footer value</td>
+    </tr>
+    </tfoot>
+</table>
+<br/>
+<br/>
+<table cellspacing="0" cellpadding="3">
+    <tr>
+        <td width="30%">
+            <p><strong>Fecha de elaboración:</strong></p>
+        </td>
+        <td width="30%">
+            <p>Apoderado Especial</p>
+        </td>
+        <td width="40%">
+            <p>Autorizado por Banco Pichincha C.A.</p>
+        </td>
+    </tr>
+    <tr>
+        <td width="30%" height="100px;">{13}</td>
+        <td width="30%">{14}</td>
+        <td width="40%">{15}</td>
+    </tr>
+    <tr class="no-outline">
+        <td rowspan="2">
+            <p><strong>NOTA: </strong></p>
+        </td>
+        <td>
+            <p>NOMBRE:</p>
+        </td>
+        <td>{16}</td>
+    </tr>
+    <tr class="no-outline">
+        <td>
+            <p>CEDULA:</p>
+        </td>
+        <td>{17}</td>
+    </tr>
+</table>
+</body>
+</html>

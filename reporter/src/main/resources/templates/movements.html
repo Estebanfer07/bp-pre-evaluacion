@@ -1,0 +1,284 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>{{title}}</title>
+    <style type="text/css">
+      @page {
+        size: 29.7cm 21cm;
+        margin-top: 156px;
+        margin-bottom: 60px;
+
+        @bottom-center {
+          content: element(footer);
+        }
+        @top-center {
+          content: element(header);
+          height: 96px;
+        }
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        text-indent: 0;
+
+        font-family: Arial;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      .general-header {
+        position: running(header);
+        height: 72px;
+      }
+
+      .general-header > * {
+        display: inline-block;
+        position: absolute;
+      }
+
+      .general-header img {
+        left: 0;
+        bottom: 48px;
+      }
+
+      .general-header h1 {
+        margin: 0 auto;
+        width: 100%;
+        font-size: 28px;
+        font-weight: 700;
+        line-height: 32px;
+        bottom: 64px;
+        left: 0;
+      }
+
+      .general-header-loan-info {
+        right: 0;
+        bottom: 24px;
+      }
+
+      .general-header-loan-info p {
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px;
+      }
+
+      body {
+        border-top: 1px solid #ececed;
+      }
+
+      .header-row {
+        margin: 32px 0 40px;
+        overflow: auto; /* Added to clear floats */
+        text-align: left;
+      }
+
+      .header-row .header-col:nth-child(1) {
+        width: 300px;
+        margin-right: 126px;
+      }
+
+      .header-col {
+        width: 300px;
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .header-item {
+        margin-bottom: 16px;
+        text-align: left;
+        height: 16px;
+        line-height: 16px;
+        font-size: 14px;
+      }
+
+      .header-item span:nth-child(1) {
+        font-weight: 700;
+        line-height: 16px;
+      }
+
+      .header-item span:nth-child(2) {
+        font-weight: 400;
+        line-height: 16px;
+      }
+
+      .header-comment {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        color: #2f7abf;
+        text-align: left;
+      }
+
+      .header-col .header-comment:nth-child(5) {
+        margin-bottom: 16px;
+      }
+
+      table {
+        -fs-table-paginate: paginate;
+        page-break-inside: auto;
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      thead {
+        display: table-header-group;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+        outline: thin solid;
+      }
+
+      td {
+        height: 40px;
+        border-bottom: 1px solid #dee3ec;
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 20px;
+      }
+
+      thead td {
+        background: #f8f9fc;
+        border-top: 1px solid;
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 20px;
+      }
+
+      .PENDING-fee,
+      .current-fee {
+        background: #eaf1f8;
+      }
+
+      .OVERDUE-fee,
+      .arrear-fee {
+        background: #fef0e5;
+      }
+
+      .arrear-fee-summary {
+        background: #f6e0cc;
+        text-align: left;
+      }
+
+      .arrear-fee-summary td:nth-child(1),
+      .arrear-fee-summary td:nth-child(3) {
+        padding: 0 14px;
+      }
+
+      .summary {
+        font-size: 12px;
+        font-weight: 300;
+        line-height: 16px;
+        background: #ebebec;
+      }
+
+      .summary td:nth-child(2) {
+        text-align: right;
+      }
+
+      .summary td:nth-child(4) {
+        text-align: left;
+      }
+
+      .custom-footer {
+        width: 100%;
+        text-align: center;
+        position: running(footer);
+      }
+
+      .custom-footer .page-counter,
+      .custom-footer .footer-disclaimer {
+        display: inline-block;
+        width: 49.5%;
+      }
+
+      .footer-disclaimer {
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        color: #2f7abf;
+        text-align: right;
+      }
+
+      .page-counter {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 32px;
+        color: #2c2c30;
+        text-align: left;
+      }
+
+      .page-counter::after {
+        font-weight: 400;
+        content: counter(page) "/" counter(pages);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="general-header">
+      <img src="data:image/png;base64,{{bpLogo}}" />
+      <h1>{{title}}</h1>
+      <div class="general-header-loan-info">
+        <p>Fecha de generación: {{generatedAt}}</p>
+        <p>Periodo: {{from}} a {{to}}</p>
+      </div>
+    </div>
+    <div class="custom-footer">
+      <div class="page-counter">Página:</div>
+      <div class="footer-disclaimer">
+        *Este reporte es informativo y muestra los movimientos realizados en el
+        periodo seleccionado.
+      </div>
+    </div>
+    <div class="header-row">
+      <div class="header-col">
+        <p class="header-item">
+          <span>Cliente: </span> <span>{{clientName}}</span>
+        </p>
+        <p class="header-item">
+          <span>Identificación: </span> <span>{{clientIdentification}}</span>
+        </p>
+      </div>
+      <div class="header-col">
+        <p class="header-item">
+          <span>Número de cuenta: </span> <span>{{accountNumber}}</span>
+        </p>
+      </div>
+    </div>
+    <table cellspacing="0">
+      <thead>
+        <tr>
+          <td>Fecha</td>
+          <td>Tipo</td>
+          <td>Monto</td>
+          <td>Saldo Inicial</td>
+          <td>Saldo Final</td>
+
+          {{if clientIdentification === N/A}}
+          <td>Cliente</td>
+          <td>Número de cuenta</td>
+          {{endif}}
+        </tr>
+      </thead>
+      {{movements}}
+      <tr>
+        <td>{{movements.date}}</td>
+        <td>{{movements.type}}</td>
+        <td>{{movements.amount}}</td>
+        <td>{{movements.initialBalance}}</td>
+        <td>{{movements.balance}}</td>
+        {{if movements.clientName !== undefined}}
+        <td>{{movements.clientName}}</td>
+        <td>{{movements.accountNumber}}</td>
+        {{endif}}
+      </tr>
+      {{movements}}
+    </table>
+  </body>
+</html>
