@@ -2,7 +2,11 @@ package com.esterodr.backend.domain;
 
 import com.esterodr.backend.domain.enums.Gender;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +17,9 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "people")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Person {
     @Id
     @GeneratedValue

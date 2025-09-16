@@ -3,7 +3,11 @@ package com.esterodr.backend.domain;
 import com.esterodr.backend.domain.enums.ClientState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,6 +19,9 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "clients")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Client {
     @Id
     @GeneratedValue
@@ -33,6 +40,7 @@ public class Client {
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
+    @Builder.Default
     private ClientState state = ClientState.ACTIVE;
 
     @CreationTimestamp

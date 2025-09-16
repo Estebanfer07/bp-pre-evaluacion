@@ -1,7 +1,11 @@
 package com.esterodr.backend.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -18,6 +22,9 @@ import java.util.Random;
 @Data
 @Entity
 @Table(name = "accounts")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Account {
     @Id
     @GeneratedValue
@@ -47,6 +54,7 @@ public class Account {
 
     private Double balance;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
     private AccountState state = AccountState.ACTIVE;
