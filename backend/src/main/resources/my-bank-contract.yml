@@ -194,6 +194,104 @@ paths:
           description: Client deleted
         "404":
           description: Client not found
+  /movements:
+    get:
+      tags:
+        - Movements
+      summary: Get movements report
+      parameters:
+        - name: format
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - JSON
+              - PDF
+            default: JSON
+          description: Report format
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: Start date for movements filter (defaults to current month start)
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+          description: End date for movements filter (defaults to current month end)
+      responses:
+        "200":
+          description: Movements report
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: "#/components/schemas/Movement"
+                  - type: object
+                    description: PDF report data
+    post:
+      tags:
+        - Movements
+      summary: Create a new movement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMovementDto"
+      responses:
+        "201":
+          description: Movement created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movement"
+        "400":
+          description: Bad request (e.g., insufficient balance)
+  /movements/{id}:
+    get:
+      tags:
+        - Movements
+      summary: Get movement by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Movement found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Movement"
+        "404":
+          description: Movement not found
+    delete:
+      tags:
+        - Movements
+      summary: Soft delete movement (reverse)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Movement deleted (reversed)
+        "404":
+          description: Movement not found
 
 components:
   schemas:
@@ -376,179 +474,53 @@ components:
           type: string
         phone:
           type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateAccountDto"
-      responses:
-        "200":
-          description: Account updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Account"
-        "404":
-          description: Account not found
-    delete:
-      summary: Delete account by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Account deleted
-        "404":
-          description: Account not found
-  /clients:
-    get:
-      summary: Get all clients
-      responses:
-        "200":
-          description: List of clients
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Client"
-    post:
-      summary: Create a new client
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateClientWithPersonDto"
-      responses:
-        "200":
-          description: Client created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Client"
-  /clients/{id}:
-    get:
-      summary: Get client by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "200":
-          description: Client found
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Client"
-        "404":
-          description: Client not found
-    patch:
-      summary: Update client by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateClientWithPersonDto"
-      responses:
-        "200":
-          description: Client updated
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Client"
-        "404":
-          description: Client not found
-    delete:
-      summary: Delete client by ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Client deleted
-        "404":
-          description: Client not found
-    Client:
+    Movement:
       type: object
       properties:
         id:
           type: string
           format: uuid
-        person:
-          $ref: "#/components/schemas/Person"
-        password:
-          type: string
-        state:
-          type: string
-          enum:
-            - ACTIVE
-            - INACTIVE
-        createdAt:
-          type: string
-          format: date-time
-        updatedAt:
-          type: string
-          format: date-time
-    Person:
-      type: object
-      properties:
-        id:
+        accountId:
           type: string
           format: uuid
-        name:
-          type: string
-        gender:
+        amount:
+          type: number
+          format: double
+        type:
           type: string
           enum:
-            - MALE
-            - FEMALE
-            - OTHER
-        age:
-          type: integer
-        identification:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
-        createdAt:
+            - DEPOSIT
+            - WITHDRAWAL
+            - TRANSFER
+        date:
           type: string
           format: date-time
-        updatedAt:
+      required:
+        - id
+        - accountId
+        - amount
+        - type
+        - date
+    CreateMovementDto:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        amount:
+          type: number
+          format: double
+        type:
+          type: string
+          enum:
+            - DEPOSIT
+            - WITHDRAWAL
+            - TRANSFER
+        date:
           type: string
           format: date-time
-    CreateClientWithPersonDto:
-      allOf:
-        - $ref: "#/components/schemas/CreatePersonDto"
-        - type: object
-          properties:
-            password:
-              type: string
-    UpdateClientWithPersonDto:
-      allOf:
-        - $ref: "#/components/schemas/UpdatePersonDto"
-        - type: object
-          properties:
-            password:
-              type: string
+      required:
+        - accountId
+        - amount
+        - type
+        - date
