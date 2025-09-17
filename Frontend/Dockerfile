@@ -18,7 +18,6 @@ RUN yarn build
 FROM nginx:alpine AS runner
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Add custom nginx config for SPA routing with proper configuration
 RUN echo 'server { \
     listen 80; \
     listen [::]:80; \
