@@ -26,12 +26,8 @@ public class MovementsController {
 
     @PostMapping
     public ResponseEntity<Movements> createMovement(@Valid @RequestBody CreateMovementDto movementData) {
-        try {
-            Movements movement = movementService.createMovement(movementData);
-            return ResponseEntity.status(HttpStatus.CREATED).body(movement);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Movements movement = movementService.createMovement(movementData);
+        return ResponseEntity.status(HttpStatus.CREATED).body(movement);
     }
 
     @DeleteMapping("/{id}")

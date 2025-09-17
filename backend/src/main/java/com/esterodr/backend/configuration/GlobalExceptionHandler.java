@@ -1,7 +1,5 @@
 package com.esterodr.backend.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -12,13 +10,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -27,7 +26,7 @@ public class GlobalExceptionHandler {
         ex.getBindingResult().getFieldErrors().forEach(error -> {
             errors.put(error.getField(), error.getDefaultMessage());
         });
-        logger.warn("Invalid request params at {}: {}", request.getDescription(false), errors);
+        log.warn("Invalid request params at {}: {}", request.getDescription(false), errors);
         Map<String, String> body = new HashMap<>();
         body.put("error", "Invalid request parameters");
         body.put("details", "One or more fields are invalid.");
@@ -48,7 +47,7 @@ public class GlobalExceptionHandler {
                 field = cause.getMessage().substring(idx + 2, endIdx);
             }
         }
-        logger.warn("Invalid request body at uri={}: {} (field: {})", request.getRequestURI(), ex.getMessage(), field);
+        log.warn("Invalid request body at uri={}: {} (field: {})", request.getRequestURI(), ex.getMessage(), field);
         Map<String, String> body = new HashMap<>();
         body.put("error", "Malformed request body");
         if (field != null) {
@@ -60,9 +59,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
+        log.warn("Invalid argument at {}: {}", request.getDescription(false), ex.getMessage());
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "Invalid request");
+        body.put("details", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        logger.error("Exception at {}: {}", request.getDescription(false), ex.getMessage(), ex);
+        log.error("Exception at {}: {}", request.getDescription(false), ex.getMessage(), ex);
         Map<String, String> body = new HashMap<>();
         body.put("error", "Internal server error");
         body.put("details", "An unexpected error occurred.");

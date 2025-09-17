@@ -27,3 +27,7 @@ my-bank:
     secret-key: ${MY_BANK_ENCRYPTION_SECRET_KEY:MyS3cretK3yF0rEncrypt10n}
   pdf-service:
     url: ${PDF_SERVICE_URL:http://localhost:8083/api/pdf/movements}
+logging:
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    "[com.esterodr.backend]": ${LOG_LEVEL_APP:DEBUG}
