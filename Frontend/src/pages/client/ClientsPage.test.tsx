@@ -42,7 +42,9 @@ describe("ClientsPage (with axios mocking)", () => {
   it("renders page title and Nuevo Cliente button", async () => {
     render(<ClientsPage />);
     expect(screen.getByText("Clientes")).toBeInTheDocument();
-    expect(screen.getByText("Nuevo Cliente")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Nuevo Cliente" })
+    ).toBeInTheDocument();
   });
 
   it("renders search input", () => {
@@ -139,6 +141,39 @@ describe("ClientsPage (with axios mocking)", () => {
     window.confirm = originalConfirm;
   });
 
+  it("renders edit buttons for each client", async () => {
+    render(<ClientsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    await waitFor(() => {
+      const editButtons = screen.getAllByLabelText(/editar cliente/i);
+      expect(editButtons.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("opens edit modal when edit button is clicked", async () => {
+    render(<ClientsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    await waitFor(() => {
+      const editButtons = screen.getAllByLabelText(/editar cliente/i);
+      expect(editButtons.length).toBeGreaterThan(0);
+    });
+
+    const firstEditButton = screen.getAllByLabelText(/editar cliente/i)[0];
+    fireEvent.click(firstEditButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Editar Cliente")).toBeInTheDocument();
+    });
+  });
+
   it("opens client modal when 'Nuevo Cliente' button is clicked", async () => {
     render(<ClientsPage />);
 
@@ -146,7 +181,9 @@ describe("ClientsPage (with axios mocking)", () => {
       expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
     });
 
-    const newClientButton = screen.getByText("Nuevo Cliente");
+    const newClientButton = screen.getByRole("button", {
+      name: "Nuevo Cliente",
+    });
     fireEvent.click(newClientButton);
 
     await waitFor(() => {
@@ -166,7 +203,9 @@ describe("ClientsPage (with axios mocking)", () => {
     });
 
     // Open modal
-    const newClientButton = screen.getByText("Nuevo Cliente");
+    const newClientButton = screen.getByRole("button", {
+      name: "Nuevo Cliente",
+    });
     fireEvent.click(newClientButton);
 
     await waitFor(() => {

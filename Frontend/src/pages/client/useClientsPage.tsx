@@ -7,9 +7,8 @@ import type { ClientListItem } from "../../types";
 
 export const useClientsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const { setSelectedClient } = useClientsStore();
+  const { setSelectedClient, openModal, openEditModal } = useClientsStore();
   const { useGetClients, useDeleteClient } = useClientsQueries();
 
   const { data: clients, isLoading, error } = useGetClients(searchTerm);
@@ -42,18 +41,20 @@ export const useClientsPage = () => {
     [deleteClientMutation]
   );
 
-  const handleOpenModal = useCallback(() => {
-    setIsModalOpen(true);
-  }, []);
+  const handleEditClient = useCallback(
+    (client: ClientListItem) => {
+      console.log("Editing client:", client);
+      openEditModal(client);
+    },
+    [openEditModal]
+  );
 
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
-  }, []);
+  const handleOpenModal = useCallback(() => {
+    openModal();
+  }, [openModal]);
 
   const handleClientCreated = useCallback(() => {
     console.log("Client created successfully");
-    // Modal will be closed automatically by ClientModal
-    // Query will be invalidated automatically by the mutation
   }, []);
 
   const tableColumns: TableColumn<ClientListItem>[] = [
@@ -107,18 +108,32 @@ export const useClientsPage = () => {
       align: "center",
       width: "10%",
       render: (_, record) => (
-        <button
-          className="delete-btn"
-          type="button"
-          aria-label={`Eliminar cliente ${record.person.name}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteClient(record);
-          }}
-          disabled={deleteClientMutation.isPending}
-        >
-          {deleteClientMutation.isPending ? "..." : "🗑️"}
-        </button>
+        <div className="actions-container">
+          <button
+            className="edit-btn"
+            type="button"
+            aria-label={`Editar cliente ${record.person.name}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditClient(record);
+            }}
+            disabled={deleteClientMutation.isPending}
+          >
+            ✏️
+          </button>
+          <button
+            className="delete-btn"
+            type="button"
+            aria-label={`Eliminar cliente ${record.person.name}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteClient(record);
+            }}
+            disabled={deleteClientMutation.isPending}
+          >
+            {deleteClientMutation.isPending ? "..." : "🗑️"}
+          </button>
+        </div>
       ),
     },
   ];
@@ -131,10 +146,9 @@ export const useClientsPage = () => {
     handleSearch,
     handleRowClick,
     handleDeleteClient,
+    handleEditClient,
     isDeleting: deleteClientMutation.isPending,
-    isModalOpen,
     handleOpenModal,
-    handleCloseModal,
     handleClientCreated,
   };
 };

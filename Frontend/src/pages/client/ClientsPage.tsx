@@ -3,6 +3,7 @@ import { Button, SearchInput, Table, ClientModal } from "../../components";
 import "../pages.scss";
 import "./ClientsPage.scss";
 import { useClientsPage } from "./useClientsPage";
+import { useClientsStore } from "../../store";
 
 export const ClientsPage: React.FC = () => {
   const {
@@ -12,11 +13,11 @@ export const ClientsPage: React.FC = () => {
     error,
     handleSearch,
     handleRowClick,
-    isModalOpen,
     handleOpenModal,
-    handleCloseModal,
     handleClientCreated,
   } = useClientsPage();
+
+  const { isModalOpen, selectedClientForEdit, closeModal } = useClientsStore();
 
   if (error) {
     return (
@@ -63,8 +64,10 @@ export const ClientsPage: React.FC = () => {
 
       <ClientModal
         isOpen={isModalOpen}
-        onClose={handleCloseModal}
+        onClose={closeModal}
         onSuccess={handleClientCreated}
+        editMode={!!selectedClientForEdit}
+        initialData={selectedClientForEdit || undefined}
       />
     </div>
   );

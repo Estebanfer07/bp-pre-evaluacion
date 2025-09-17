@@ -3,46 +3,87 @@ import { Modal } from "../Modal/Modal";
 import { ClientForm } from "../ClientForm/ClientForm";
 import { useClientsQueries } from "../../../hooks/services/useClientsQueries";
 import type { ClientForm as ClientFormType } from "../../../types/clients";
-import type { CreateClientWithPerson } from "../../../types/clients";
+import type {
+  CreateClientWithPerson,
+  UpdateClientWithPerson,
+  ClientListItem,
+} from "../../../types/clients";
 import "./ClientModal.scss";
 
 export interface ClientModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
+  editMode?: boolean;
+  initialData?: ClientListItem;
 }
 
 export const ClientModal: React.FC<ClientModalProps> = ({
   isOpen,
   onClose,
   onSuccess,
+  editMode = false,
+  initialData,
 }) => {
-  const { useCreateClient } = useClientsQueries();
+  const { useCreateClient, useUpdateClient } = useClientsQueries();
   const createClientMutation = useCreateClient();
+  const updateClientMutation = useUpdateClient();
+
+  const isLoading =
+    createClientMutation.isPending || updateClientMutation.isPending;
 
   const handleFormSubmit = (formData: ClientFormType) => {
-    const clientData: CreateClientWithPerson = {
-      name: formData.name,
-      identification: formData.identification,
-      phone: formData.phone,
-      address: formData.address,
-      age: formData.age,
-      gender: formData.gender,
-      password: formData.password,
-      state: "ACTIVE",
-    };
+    if (editMode && initialData) {
+      // Update existing client
+      const updateData: UpdateClientWithPerson = {
+        name: formData.name,
+        identification: formData.identification,
+        phone: formData.phone,
+        address: formData.address,
+        age: formData.age,
+        gender: formData.gender,
+        password: formData.password,
+      };
 
-    createClientMutation.mutate(clientData, {
-      onSuccess: () => {
-        onClose();
-        if (onSuccess) {
-          onSuccess();
+      updateClientMutation.mutate(
+        { id: initialData.id, data: updateData },
+        {
+          onSuccess: () => {
+            onClose();
+            if (onSuccess) {
+              onSuccess();
+            }
+          },
+          onError: (error) => {
+            console.error("Error updating client:", error);
+          },
         }
-      },
-      onError: (error) => {
-        console.error("Error creating client:", error);
-      },
-    });
+      );
+    } else {
+      // Create new client
+      const clientData: CreateClientWithPerson = {
+        name: formData.name,
+        identification: formData.identification,
+        phone: formData.phone,
+        address: formData.address,
+        age: formData.age,
+        gender: formData.gender,
+        password: formData.password,
+        state: "ACTIVE",
+      };
+
+      createClientMutation.mutate(clientData, {
+        onSuccess: () => {
+          onClose();
+          if (onSuccess) {
+            onSuccess();
+          }
+        },
+        onError: (error) => {
+          console.error("Error creating client:", error);
+        },
+      });
+    }
   };
 
   const handleSave = () => {
@@ -57,28 +98,46 @@ export const ClientModal: React.FC<ClientModalProps> = ({
   };
 
   const handleCancel = () => {
-    if (!createClientMutation.isPending) {
+    if (!isLoading) {
       onClose();
     }
+  };
+
+  // Convert ClientListItem to ClientFormType for editing
+  const getInitialFormData = (): Partial<ClientFormType> | undefined => {
+    if (!editMode || !initialData) {
+      return undefined;
+    }
+
+    return {
+      name: initialData.person.name,
+      identification: initialData.person.identification,
+      phone: initialData.person.phone,
+      address: "", // Address not available in ClientListItem, will need to fetch full client data
+      age: 0, // Age not available in ClientListItem, will need to fetch full client data
+      gender: "MALE", // Gender not available in ClientListItem, will need to fetch full client data
+      password: "", // Never pre-populate password for security
+    };
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Nuevo Cliente"
+      title={editMode ? "Editar Cliente" : "Nuevo Cliente"}
       onSave={handleSave}
       onCancel={handleCancel}
-      saveLabel="Crear Cliente"
+      saveLabel={editMode ? "Actualizar Cliente" : "Crear Cliente"}
       cancelLabel="Cancelar"
-      isSaving={createClientMutation.isPending}
-      saveDisabled={createClientMutation.isPending}
+      isSaving={isLoading}
+      saveDisabled={isLoading}
       size="lg"
     >
       <div className="client-modal__content">
         <ClientForm
           onSubmit={handleFormSubmit}
-          isLoading={createClientMutation.isPending}
+          initialData={getInitialFormData()}
+          isLoading={isLoading}
         />
       </div>
     </Modal>
