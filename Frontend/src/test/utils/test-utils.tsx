@@ -11,15 +11,18 @@ import { routeTree } from "../../router/routeTree.gen";
 
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   const memoryHistory = createMemoryHistory({
-    initialEntries: ["/"],
+    initialEntries: ["/accounts"],
   });
 
-  const router = createRouter({ routeTree, history: memoryHistory });
+  const router = createRouter({
+    routeTree,
+    history: memoryHistory,
+    defaultComponent: () => <>test{children}</>,
+  });
 
   return (
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
-      {children}
     </QueryClientProvider>
   );
 };

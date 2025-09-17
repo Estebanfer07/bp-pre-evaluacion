@@ -18,7 +18,7 @@ export const Sidebar: React.FC = () => {
   const location = useLocation();
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" data-testid="sidebar">
       <div className="sidebar__brand">
         <div className="sidebar__logo">
           <span className="sidebar__logo-icon">🏦</span>

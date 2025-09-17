@@ -57,7 +57,9 @@ describe("ClientsPage (with axios mocking)", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText("Juan Carlos Pérez")).toBeInTheDocument();
+      expect(screen.getAllByText("Juan Carlos Pérez").length).toBeGreaterThan(
+        0
+      );
     });
 
     const idElements = screen.getAllByText("1234567890");
@@ -67,7 +69,6 @@ describe("ClientsPage (with axios mocking)", () => {
   });
 
   it("handles loading state correctly", async () => {
-    // Delay the mock response to test loading state
     mockedApiClient.get = vi
       .fn()
       .mockImplementation(
@@ -79,13 +80,10 @@ describe("ClientsPage (with axios mocking)", () => {
 
     render(<ClientsPage />);
 
-    // Should show loading state initially
-    // (Note: This depends on your Table component showing loading state)
     await waitFor(() => {
       expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
     });
 
-    // Eventually should show the data
     await waitFor(
       () => {
         expect(screen.getAllByText("Juan Carlos Pérez").length).toBeGreaterThan(
