@@ -59,7 +59,7 @@ export const AccountListItemSchema = z.object({
   createdAt: z.iso.datetime(),
 });
 
-export type AccountListItem = z.infer<typeof AccountListItemSchema>;
+export type AccountListItem = z.infer<typeof AccountSchema>;
 
 export const AccountsListResponseSchema = z.array(AccountSchema);
 export type AccountsListResponse = z.infer<typeof AccountsListResponseSchema>;

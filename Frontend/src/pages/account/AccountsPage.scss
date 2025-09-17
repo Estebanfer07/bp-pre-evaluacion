@@ -35,6 +35,39 @@
 }
 
 // Action buttons
+.actions-container {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.edit-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: $border-radius-sm;
+  transition: all 0.2s ease;
+  color: #007bff;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(0, 123, 255, 0.1);
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &:focus {
+    outline: 2px solid rgba(0, 123, 255, 0.3);
+    outline-offset: 2px;
+  }
+}
+
 .delete-btn {
   background: none;
   border: none;

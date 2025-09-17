@@ -52,7 +52,7 @@ describe("AccountsPage (with axios mocking)", () => {
   it("renders page title and Nueva button", async () => {
     render(<AccountsPage />);
     expect(screen.getAllByText("Cuentas").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Nueva").length).toBeGreaterThan(0);
+    expect(screen.getByText("Nueva Cuenta")).toBeInTheDocument();
   });
 
   it("renders search input", () => {

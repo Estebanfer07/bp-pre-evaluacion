@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, SearchInput, Table } from "../../components";
+import { Button, SearchInput, Table, AccountModal } from "../../components";
 import { useAccountsPage } from "./useAccountsPage";
+import { useAccountsStore } from "../../store";
 import "../pages.scss";
 import "./AccountsPage.scss";
 
@@ -14,13 +15,20 @@ export const AccountsPage: React.FC = () => {
     handleRowClick,
     selectedClient,
     handleClearClientFilter,
+    handleOpenModal,
+    handleAccountCreated,
   } = useAccountsPage();
+
+  const { isModalOpen, selectedAccountForEdit, closeModal } =
+    useAccountsStore();
 
   return (
     <div className="page">
       <div className="page__header">
         <h1>Cuentas</h1>
-        <Button variant="primary">Nueva</Button>
+        <Button variant="primary" onClick={handleOpenModal}>
+          Nueva Cuenta
+        </Button>
       </div>
 
       {selectedClient && (
@@ -69,6 +77,14 @@ export const AccountsPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      <AccountModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSuccess={handleAccountCreated}
+        editMode={!!selectedAccountForEdit}
+        initialData={selectedAccountForEdit || undefined}
+      />
     </div>
   );
 };

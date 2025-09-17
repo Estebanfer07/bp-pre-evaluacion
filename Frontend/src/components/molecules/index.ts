@@ -9,3 +9,9 @@ export type { ClientFormProps } from "./ClientForm/ClientForm";
 
 export { ClientModal } from "./ClientModal/ClientModal";
 export type { ClientModalProps } from "./ClientModal/ClientModal";
+
+export { AccountForm } from "./AccountForm/AccountForm";
+export type { AccountFormProps } from "./AccountForm/AccountForm";
+
+export { AccountModal } from "./AccountModal/AccountModal";
+export type { AccountModalProps } from "./AccountModal/AccountModal";

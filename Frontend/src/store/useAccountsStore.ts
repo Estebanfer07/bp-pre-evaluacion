@@ -4,7 +4,13 @@ import type { AccountListItem } from "../types";
 
 interface AccountsState {
   selectedAccount: AccountListItem | null;
+  selectedAccountForEdit: AccountListItem | null;
+  isModalOpen: boolean;
   setSelectedAccount: (account: AccountListItem | null) => void;
+  setSelectedAccountForEdit: (account: AccountListItem | null) => void;
+  openModal: () => void;
+  openEditModal: (account: AccountListItem) => void;
+  closeModal: () => void;
   clearSelectedAccount: () => void;
 }
 
@@ -15,9 +21,43 @@ export const useAccountsStore = create<AccountsState>()(
     persist(
       (set) => ({
         selectedAccount: null,
+        selectedAccountForEdit: null,
+        isModalOpen: false,
 
         setSelectedAccount: (account: AccountListItem | null) => {
           set({ selectedAccount: account }, false, "setSelectedAccount");
+        },
+
+        setSelectedAccountForEdit: (account: AccountListItem | null) => {
+          set(
+            { selectedAccountForEdit: account },
+            false,
+            "setSelectedAccountForEdit"
+          );
+        },
+
+        openModal: () => {
+          set(
+            { isModalOpen: true, selectedAccountForEdit: null },
+            false,
+            "openModal"
+          );
+        },
+
+        openEditModal: (account: AccountListItem) => {
+          set(
+            { isModalOpen: true, selectedAccountForEdit: account },
+            false,
+            "openEditModal"
+          );
+        },
+
+        closeModal: () => {
+          set(
+            { isModalOpen: false, selectedAccountForEdit: null },
+            false,
+            "closeModal"
+          );
         },
 
         clearSelectedAccount: () => {

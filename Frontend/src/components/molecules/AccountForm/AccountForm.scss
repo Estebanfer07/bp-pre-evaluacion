@@ -1,0 +1,82 @@
+@use "../../../styles" as *;
+
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &__section-title {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $text-color;
+    margin: 0;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1px solid $border-color;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing-md;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+
+    &--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__label {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-medium;
+    color: $text-color;
+    margin: 0;
+  }
+
+  &__select {
+    padding: 8px 16px;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-md;
+    font-size: $font-size-base;
+    color: $text-color;
+    background-color: $background-color;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+    }
+
+    &:disabled {
+      background-color: $border-color;
+      color: $border-color;
+      cursor: not-allowed;
+    }
+
+    &--error {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px rgba($error-color, 0.1);
+    }
+  }
+
+  &__error {
+    font-size: $font-size-sm;
+    color: $error-color;
+    margin: 0;
+  }
+}

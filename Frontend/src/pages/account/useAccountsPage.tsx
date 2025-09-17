@@ -13,7 +13,7 @@ export const useAccountsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { selectedClient, clearSelectedClient } = useClientsStore();
-  const { setSelectedAccount } = useAccountsStore();
+  const { setSelectedAccount, openModal, openEditModal } = useAccountsStore();
   const { useGetAccounts, useDeleteAccount } = useAccountsQueries();
   const { useGetClients } = useClientsQueries();
 
@@ -86,6 +86,22 @@ export const useAccountsPage = () => {
     },
     [deleteAccountMutation]
   );
+
+  const handleEditAccount = useCallback(
+    (account: AccountListItem) => {
+      console.log("Editing account:", account);
+      openEditModal(account);
+    },
+    [openEditModal]
+  );
+
+  const handleOpenModal = useCallback(() => {
+    openModal();
+  }, [openModal]);
+
+  const handleAccountCreated = useCallback(() => {
+    console.log("Account created successfully");
+  }, []);
 
   const tableColumns: TableColumn<AccountListItem>[] = [
     {
@@ -161,18 +177,32 @@ export const useAccountsPage = () => {
       align: "center",
       width: "10%",
       render: (_, record) => (
-        <button
-          className="delete-btn"
-          type="button"
-          aria-label={`Eliminar cuenta ${record.accountNumber}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            handleDeleteAccount(record);
-          }}
-          disabled={deleteAccountMutation.isPending}
-        >
-          {deleteAccountMutation.isPending ? "..." : "🗑️"}
-        </button>
+        <div className="actions-container">
+          <button
+            className="edit-btn"
+            type="button"
+            aria-label={`Editar cuenta ${record.accountNumber}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEditAccount(record);
+            }}
+            disabled={deleteAccountMutation.isPending}
+          >
+            ✏️
+          </button>
+          <button
+            className="delete-btn"
+            type="button"
+            aria-label={`Eliminar cuenta ${record.accountNumber}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteAccount(record);
+            }}
+            disabled={deleteAccountMutation.isPending}
+          >
+            {deleteAccountMutation.isPending ? "..." : "🗑️"}
+          </button>
+        </div>
       ),
     },
   ];
@@ -187,6 +217,9 @@ export const useAccountsPage = () => {
     selectedClient,
     handleClearClientFilter,
     handleDeleteAccount,
+    handleEditAccount,
+    handleOpenModal,
+    handleAccountCreated,
     isDeleting: deleteAccountMutation.isPending,
   };
 };
