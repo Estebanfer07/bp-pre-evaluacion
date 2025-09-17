@@ -28,7 +28,7 @@ vi.mock("axios", () => ({
 
 describe("Sidebar", () => {
   it("renders sidebar and all navigation links", async () => {
-    render(<Sidebar />);
+    render(<Sidebar />, {}, true);
 
     await waitFor(() => {
       expect(screen.getByTestId("sidebar")).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe("Sidebar", () => {
   });
 
   it("highlights the active link based on route", async () => {
-    render(<Sidebar />);
+    render(<Sidebar />, {}, true);
     await waitFor(() => {
       const accountsLink = screen.getByRole("link", { name: /Cuentas/i });
       expect(accountsLink.className).toMatch(/active|selected/);

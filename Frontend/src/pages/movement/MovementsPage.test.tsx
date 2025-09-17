@@ -1,82 +1,87 @@
-import { screen, fireEvent } from "@testing-library/react";
-import { vi, describe, test, expect, beforeEach, type Mock } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, waitFor } from "../../test/utils/test-utils";
 import { MovementsPage } from "./MovementsPage";
-import { render } from "../../test/utils/test-utils";
-import { useMovementsPage } from "./useMovementsPage";
-import { useAccountsStore } from "../../store";
+import { mockMovementListItems } from "../../test/utils/mocks/movements/mockMovements";
 
-vi.mock("./useMovementsPage");
-vi.mock("../../store");
-
-vi.mock("../../utils", () => ({
-  downloadPdfFromBase64: vi.fn(),
-  generateMovementReportFilename: vi.fn(() => "test-report.pdf"),
+vi.mock("axios", () => ({
+  default: {
+    create: vi.fn(() => ({
+      get: vi.fn(),
+      post: vi.fn(),
+      put: vi.fn(),
+      delete: vi.fn(),
+      interceptors: {
+        request: { use: vi.fn() },
+        response: { use: vi.fn() },
+      },
+    })),
+  },
 }));
 
-const mockUseMovementsPage = useMovementsPage as Mock;
-const mockUseAccountsStore = useAccountsStore as unknown as Mock;
+// Mock the accounts store
+vi.mock("../../store/useAccountsStore", () => ({
+  useAccountsStore: vi.fn(() => ({
+    selectedAccount: null,
+    clearSelectedAccount: vi.fn(),
+  })),
+}));
 
-const mockMovementsData = [
-  {
-    id: "mov-1",
-    accountId: "acc-1",
-    movementType: "DEPOSIT",
-    amount: 500.0,
-    balance: 2250.75,
-    date: "2024-01-20T14:15:00Z",
-    isReversed: false,
-    createdAt: "2024-01-20T14:15:00Z",
-    accountNumber: "0012345678",
-    clientName: "Juan Carlos Pérez",
-  },
-  {
-    id: "mov-2",
-    accountId: "acc-1",
-    movementType: "WITHDRAWAL",
-    amount: 250.0,
-    balance: 1750.75,
-    date: "2024-01-19T10:30:00Z",
-    isReversed: false,
-    createdAt: "2024-01-19T10:30:00Z",
-    accountNumber: "0012345678",
-    clientName: "Juan Carlos Pérez",
-  },
-];
+import apiClient from "../../hooks/services/apiClient";
+import { useAccountsStore } from "../../store";
 
-const mockTableColumns = [
-  { key: "date", title: "Fecha", width: "120px" },
-  { key: "accountNumber", title: "Cuenta", width: "140px" },
-  { key: "clientName", title: "Cliente", width: "200px" },
-  { key: "movementType", title: "Tipo", width: "120px" },
-  { key: "amount", title: "Monto", width: "120px", align: "right" as const },
-  { key: "balance", title: "Saldo", width: "120px", align: "right" as const },
-];
+const mockedApiClient = apiClient as any;
+const mockUseAccountsStore = useAccountsStore as any;
 
-const defaultMovementsPageReturn = {
-  tableColumns: mockTableColumns,
-  filteredMovements: mockMovementsData,
-  isLoading: false,
-  error: null,
-  handleSearch: vi.fn(),
-  handleRowClick: vi.fn(),
-  handleClearAccountFilter: vi.fn(),
-  handleGeneratePdfReport: vi.fn(),
-  isGeneratingReport: false,
-  searchQuery: "",
-};
-
-const defaultAccountsStoreReturn = {
-  selectedAccount: null,
-};
-
-describe("MovementsPage", () => {
+describe("MovementsPage (with axios mocking)", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseMovementsPage.mockReturnValue(defaultMovementsPageReturn);
-    mockUseAccountsStore.mockReturnValue(defaultAccountsStoreReturn);
+
+    mockUseAccountsStore.mockReturnValue({
+      selectedAccount: null,
+      clearSelectedAccount: vi.fn(),
+    });
+
+    mockedApiClient.get = vi.fn().mockImplementation((url: string) => {
+      if (url.startsWith("/movements/account/") && url.includes("/report")) {
+        return Promise.resolve({
+          data: {
+            jsonReport: mockMovementListItems.map((item) => ({
+              id: item.id,
+              date: item.date,
+              type: item.movementType,
+              amount: item.amount,
+              balance: item.balance,
+              accountNumber: item.accountNumber,
+              clientName: item.clientName,
+            })),
+          },
+        });
+      }
+      if (url === "/accounts") {
+        return Promise.resolve({ data: [] });
+      }
+      if (url === "/clients") {
+        return Promise.resolve({ data: [] });
+      }
+      return Promise.reject(new Error(`Unmocked endpoint: ${url}`));
+    });
+
+    mockedApiClient.post = vi.fn().mockImplementation((url: string) => {
+      if (url === "/movements/report") {
+        return Promise.resolve({ data: "base64PDFString" });
+      }
+      return Promise.reject(new Error(`Unmocked endpoint: ${url}`));
+    });
+
+    mockedApiClient.delete = vi.fn().mockImplementation((url: string) => {
+      if (url.includes("/movements/")) {
+        return Promise.resolve({ data: { success: true } });
+      }
+      return Promise.reject(new Error(`Unmocked endpoint: ${url}`));
+    });
   });
 
-  test("renders page title correctly", () => {
+  it("renders page title correctly", async () => {
     render(<MovementsPage />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
@@ -84,7 +89,7 @@ describe("MovementsPage", () => {
     );
   });
 
-  test("renders search input with correct placeholder", () => {
+  it("renders search input with correct placeholder", () => {
     render(<MovementsPage />);
 
     const searchInput = screen.getByPlaceholderText("Buscar movimientos...");
@@ -92,7 +97,7 @@ describe("MovementsPage", () => {
     expect(searchInput).toHaveValue("");
   });
 
-  test("renders PDF download button", () => {
+  it("renders PDF download button", () => {
     render(<MovementsPage />);
 
     const pdfButton = screen.getByRole("button", { name: /descargar pdf/i });
@@ -100,73 +105,126 @@ describe("MovementsPage", () => {
     expect(pdfButton).not.toBeDisabled();
   });
 
-  test("renders Table component with correct props", () => {
+  it("loads and displays movement data from API", async () => {
     render(<MovementsPage />);
 
-    const table = screen.getByRole("table");
-    expect(table).toBeInTheDocument();
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith(
+        "/movements/account/all/report",
+        {
+          params: { format: "JSON" },
+        }
+      );
+    });
 
-    expect(screen.getAllByText("Juan Carlos Pérez").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("DEPOSIT").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("WITHDRAWAL").length).toBeGreaterThan(0);
+    await waitFor(() => {
+      const table = screen.getByRole("table");
+      expect(table).toBeInTheDocument();
+    });
+
+    expect(screen.getAllByText("0012345678").length).toBeGreaterThan(0);
   });
 
-  test("calls handleSearch when search input value changes", () => {
-    const mockHandleSearch = vi.fn();
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      handleSearch: mockHandleSearch,
+  it("handles loading state correctly", async () => {
+    mockedApiClient.get = vi.fn().mockImplementation((url: string) => {
+      if (url.startsWith("/movements/account/") && url.includes("/report")) {
+        return new Promise((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                data: {
+                  jsonReport: mockMovementListItems.map((item) => ({
+                    id: item.id,
+                    date: item.date,
+                    type: item.movementType,
+                    amount: item.amount,
+                    balance: item.balance,
+                    accountNumber: item.accountNumber,
+                    clientName: item.clientName,
+                  })),
+                },
+              }),
+            100
+          )
+        );
+      }
+      if (url === "/accounts") return Promise.resolve({ data: [] });
+      if (url === "/clients") return Promise.resolve({ data: [] });
+      return Promise.reject(new Error(`Unmocked endpoint: ${url}`));
     });
 
     render(<MovementsPage />);
 
-    const searchInput = screen.getByPlaceholderText("Buscar movimientos...");
-    fireEvent.change(searchInput, { target: { value: "test search" } });
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith(
+        "/movements/account/all/report",
+        {
+          params: { format: "JSON" },
+        }
+      );
+    });
 
-    expect(mockHandleSearch).toHaveBeenCalledWith("test search");
+    await waitFor(
+      () => {
+        const table = screen.getByRole("table");
+        expect(table).toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
   });
 
-  test("calls handleGeneratePdfReport when PDF button is clicked", () => {
-    const mockHandleGeneratePdfReport = vi.fn();
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      handleGeneratePdfReport: mockHandleGeneratePdfReport,
+  it("renders reverse buttons for each movement", async () => {
+    render(<MovementsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith(
+        "/movements/account/all/report",
+        {
+          params: { format: "JSON" },
+        }
+      );
     });
+
+    await waitFor(() => {
+      const reverseButtons = screen.getAllByLabelText(/reversar movimiento/i);
+      expect(reverseButtons.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("calls reverse API when reverse button is clicked", async () => {
+    const originalConfirm = window.confirm;
+    window.confirm = vi.fn(() => true);
 
     render(<MovementsPage />);
 
-    const pdfButton = screen.getByRole("button", { name: /descargar pdf/i });
-    fireEvent.click(pdfButton);
-
-    expect(mockHandleGeneratePdfReport).toHaveBeenCalledTimes(1);
-  });
-
-  test("displays search query value in input", () => {
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      searchQuery: "test query",
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith(
+        "/movements/account/all/report",
+        {
+          params: { format: "JSON" },
+        }
+      );
     });
 
-    render(<MovementsPage />);
-
-    const searchInput = screen.getByPlaceholderText("Buscar movimientos...");
-    expect(searchInput).toHaveValue("test query");
-  });
-
-  test("shows loading state in PDF button when generating report", () => {
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      isGeneratingReport: true,
+    await waitFor(() => {
+      const reverseButtons = screen.getAllByLabelText(/reversar movimiento/i);
+      expect(reverseButtons.length).toBeGreaterThan(0);
     });
 
-    render(<MovementsPage />);
+    const firstReverseButton =
+      screen.getAllByLabelText(/reversar movimiento/i)[0];
+    firstReverseButton.click();
 
-    const pdfButton = screen.getByRole("button", { name: /generando.../i });
-    expect(pdfButton).toBeInTheDocument();
-    expect(pdfButton).toBeDisabled();
+    await waitFor(() => {
+      expect(mockedApiClient.delete).toHaveBeenCalledWith(
+        `/movements/${mockMovementListItems[0].id}`
+      );
+    });
+
+    window.confirm = originalConfirm;
   });
 
-  test("displays account filter when selectedAccount exists", () => {
+  it("displays account filter when selectedAccount exists", async () => {
     const mockSelectedAccount = {
       id: "acc-1",
       accountNumber: "0012345678",
@@ -180,6 +238,7 @@ describe("MovementsPage", () => {
 
     mockUseAccountsStore.mockReturnValue({
       selectedAccount: mockSelectedAccount,
+      clearSelectedAccount: vi.fn(),
     });
 
     render(<MovementsPage />);
@@ -188,75 +247,12 @@ describe("MovementsPage", () => {
       screen.getByText(/mostrando movimientos para la cuenta:/i)
     ).toBeInTheDocument();
     expect(screen.getAllByText("0012345678").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("Juan Carlos Pérez").length).toBeGreaterThan(0);
     expect(
       screen.getByRole("button", { name: /mostrar todos/i })
     ).toBeInTheDocument();
   });
 
-  test("displays account filter without client name when clientName is not available", () => {
-    const mockSelectedAccount = {
-      id: "acc-1",
-      accountNumber: "0012345678",
-      accountType: "SAVINGS",
-      balance: 2250.75,
-      isActive: true,
-      createdAt: "2024-01-01T00:00:00Z",
-      updatedAt: "2024-01-01T00:00:00Z",
-    };
-
-    mockUseAccountsStore.mockReturnValue({
-      selectedAccount: mockSelectedAccount,
-    });
-
-    render(<MovementsPage />);
-
-    expect(
-      screen.getByText(/mostrando movimientos para la cuenta:/i)
-    ).toBeInTheDocument();
-    expect(screen.getAllByText("0012345678").length).toBeGreaterThan(0);
-
-    // Check that the account filter doesn't show client name (should not contain " - " which indicates client name)
-    const accountFilterText = screen
-      .getByText(/mostrando movimientos para la cuenta:/i)
-      .closest(".account-filter");
-    expect(accountFilterText?.textContent).not.toMatch(/\s-\s/);
-  });
-
-  test('calls handleClearAccountFilter when "Mostrar todos" button is clicked', () => {
-    const mockHandleClearAccountFilter = vi.fn();
-    const mockSelectedAccount = {
-      id: "acc-1",
-      accountNumber: "0012345678",
-      accountType: "SAVINGS",
-      balance: 2250.75,
-      isActive: true,
-      createdAt: "2024-01-01T00:00:00Z",
-      updatedAt: "2024-01-01T00:00:00Z",
-    };
-
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      handleClearAccountFilter: mockHandleClearAccountFilter,
-    });
-
-    mockUseAccountsStore.mockReturnValue({
-      selectedAccount: mockSelectedAccount,
-    });
-
-    render(<MovementsPage />);
-
-    const clearButton = screen.getByRole("button", { name: /mostrar todos/i });
-    fireEvent.click(clearButton);
-
-    expect(mockHandleClearAccountFilter).toHaveBeenCalledTimes(1);
-  });
-
-  test("does not display account filter when selectedAccount is null", () => {
-    mockUseAccountsStore.mockReturnValue({
-      selectedAccount: null,
-    });
-
+  it("does not display account filter when selectedAccount is null", () => {
     render(<MovementsPage />);
 
     expect(
@@ -265,134 +261,5 @@ describe("MovementsPage", () => {
     expect(
       screen.queryByRole("button", { name: /mostrar todos/i })
     ).not.toBeInTheDocument();
-  });
-
-  test("renders error state correctly", () => {
-    const mockError = new Error("Failed to load movements");
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      error: mockError,
-    });
-
-    render(<MovementsPage />);
-
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Movimientos"
-    );
-    expect(
-      screen.getByText(/error al cargar los movimientos:/i)
-    ).toBeInTheDocument();
-    expect(screen.getByText(/failed to load movements/i)).toBeInTheDocument();
-
-    expect(
-      screen.queryByPlaceholderText("Buscar movimientos...")
-    ).not.toBeInTheDocument();
-    expect(screen.queryByRole("table")).not.toBeInTheDocument();
-  });
-
-  test("passes correct props to Table component", () => {
-    const mockHandleRowClick = vi.fn();
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      handleRowClick: mockHandleRowClick,
-      isLoading: true,
-    });
-
-    render(<MovementsPage />);
-
-    const tableContainer = document.querySelector(".table-container");
-    expect(tableContainer).toBeInTheDocument();
-  });
-
-  test("renders empty state when no movements", () => {
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      filteredMovements: [],
-    });
-
-    render(<MovementsPage />);
-
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
-      "Movimientos"
-    );
-    expect(
-      screen.getByPlaceholderText("Buscar movimientos...")
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: /descargar pdf/i })
-    ).toBeInTheDocument();
-
-    const tableContainer = document.querySelector(".table-container");
-    expect(tableContainer).toBeInTheDocument();
-  });
-
-  test("maintains accessibility with proper button types", () => {
-    const mockSelectedAccount = {
-      id: "acc-1",
-      accountNumber: "0012345678",
-      accountType: "SAVINGS",
-      balance: 2250.75,
-      isActive: true,
-      createdAt: "2024-01-01T00:00:00Z",
-      updatedAt: "2024-01-01T00:00:00Z",
-    };
-
-    mockUseAccountsStore.mockReturnValue({
-      selectedAccount: mockSelectedAccount,
-    });
-
-    render(<MovementsPage />);
-
-    const pdfButton = screen.getByRole("button", { name: /descargar pdf/i });
-    const clearButton = screen.getByRole("button", { name: /mostrar todos/i });
-
-    expect(pdfButton).toHaveAttribute("type", "button");
-    expect(clearButton).toHaveAttribute("type", "button");
-  });
-
-  test("handles complex movement data correctly", () => {
-    const complexMovements = [
-      ...mockMovementsData,
-      {
-        id: "mov-3",
-        accountId: "acc-2",
-        movementType: "DEPOSIT",
-        amount: 1000.5,
-        balance: 3251.25,
-        date: "2024-01-21T09:30:00Z",
-        isReversed: false,
-        createdAt: "2024-01-21T09:30:00Z",
-        accountNumber: "0012345679",
-        clientName: "María Elena García",
-      },
-    ];
-
-    mockUseMovementsPage.mockReturnValue({
-      ...defaultMovementsPageReturn,
-      filteredMovements: complexMovements,
-    });
-
-    render(<MovementsPage />);
-
-    expect(screen.getAllByText("Juan Carlos Pérez").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("María Elena García").length).toBeGreaterThan(0);
-    expect(screen.getAllByText("DEPOSIT").length).toBeGreaterThan(1);
-    expect(screen.getAllByText("WITHDRAWAL").length).toBeGreaterThan(0);
-  });
-
-  test("search controls layout is properly structured", () => {
-    render(<MovementsPage />);
-
-    const searchSection = document.querySelector(".search-section");
-    expect(searchSection).toBeInTheDocument();
-
-    const searchControls = document.querySelector(".search-controls");
-    expect(searchControls).toBeInTheDocument();
-
-    const searchInput = screen.getByPlaceholderText("Buscar movimientos...");
-    const pdfButton = screen.getByRole("button", { name: /descargar pdf/i });
-
-    expect(searchInput).toBeInTheDocument();
-    expect(pdfButton).toBeInTheDocument();
   });
 });

@@ -9,7 +9,10 @@ import {
 import { queryClient } from "../../lib/queryClient";
 import { routeTree } from "../../router/routeTree.gen";
 
-const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+const AllTheProviders = (
+  { children }: { children: React.ReactNode },
+  addRouterProvider: boolean = false
+) => {
   const memoryHistory = createMemoryHistory({
     initialEntries: ["/accounts"],
   });
@@ -22,15 +25,20 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
+      {addRouterProvider ? <RouterProvider router={router} /> : children}
     </QueryClientProvider>
   );
 };
 
 const customRender = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, "wrapper">
-) => render(ui, { wrapper: AllTheProviders, ...options });
+  options?: Omit<RenderOptions, "wrapper">,
+  addRouterProvider: boolean = false
+) =>
+  render(ui, {
+    wrapper: (data) => AllTheProviders(data, addRouterProvider),
+    ...options,
+  });
 
 export * from "@testing-library/react";
 export { customRender as render };

@@ -149,4 +149,19 @@ describe("AccountsPage (with axios mocking)", () => {
       { timeout: 2000 }
     );
   });
+
+  it("renders delete buttons for each account", async () => {
+    render(<AccountsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/accounts", {
+        params: {},
+      });
+    });
+
+    await waitFor(() => {
+      const deleteButtons = screen.getAllByLabelText(/eliminar cuenta/i);
+      expect(deleteButtons.length).toBeGreaterThan(0);
+    });
+  });
 });

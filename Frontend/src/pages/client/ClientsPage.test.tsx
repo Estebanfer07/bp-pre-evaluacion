@@ -93,4 +93,44 @@ describe("ClientsPage (with axios mocking)", () => {
       { timeout: 2000 }
     );
   });
+
+  it("renders delete buttons for each client", async () => {
+    render(<ClientsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    await waitFor(() => {
+      const deleteButtons = screen.getAllByLabelText(/eliminar cliente/i);
+      expect(deleteButtons.length).toBeGreaterThan(0);
+    });
+  });
+
+  it("calls delete API when delete button is clicked", async () => {
+    const originalConfirm = window.confirm;
+    window.confirm = vi.fn(() => true);
+
+    render(<ClientsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    await waitFor(() => {
+      const deleteButtons = screen.getAllByLabelText(/eliminar cliente/i);
+      expect(deleteButtons.length).toBeGreaterThan(0);
+    });
+
+    const firstDeleteButton = screen.getAllByLabelText(/eliminar cliente/i)[0];
+    firstDeleteButton.click();
+
+    await waitFor(() => {
+      expect(mockedApiClient.delete).toHaveBeenCalledWith(
+        `/clients/${mockClientListItems[0].id}`
+      );
+    });
+
+    window.confirm = originalConfirm;
+  });
 });
