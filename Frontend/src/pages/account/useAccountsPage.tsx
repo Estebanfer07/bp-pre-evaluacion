@@ -1,7 +1,10 @@
-import { useCallback, useState, useMemo } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useCallback, useState } from "react";
 import type { TableColumn } from "../../components";
-import { useAccountsQueries, useClientsQueries } from "../../hooks";
+import {
+  useAccountsQueries,
+  useAccountsWithClients,
+  useAccountSelection,
+} from "../../hooks";
 import { useClientsStore, useAccountsStore } from "../../store";
 import type { AccountListItem } from "../../types";
 import {
@@ -11,48 +14,14 @@ import {
 
 export const useAccountsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const navigate = useNavigate();
-  const { selectedClient, clearSelectedClient } = useClientsStore();
-  const { setSelectedAccount, openModal, openEditModal } = useAccountsStore();
-  const { useGetAccounts, useDeleteAccount } = useAccountsQueries();
-  const { useGetClients } = useClientsQueries();
+  const { selectedClient } = useClientsStore();
+  const { openModal, openEditModal } = useAccountsStore();
+  const { useDeleteAccount } = useAccountsQueries();
+  const { accounts, isLoading, error } = useAccountsWithClients(searchTerm);
+  const { handleAccountSelection, handleClearClientFilter } =
+    useAccountSelection();
 
-  const { data: allAccounts, isLoading, error } = useGetAccounts(searchTerm);
   const deleteAccountMutation = useDeleteAccount();
-
-  const { data: clients } = useGetClients();
-
-  const accounts = useMemo(() => {
-    if (!allAccounts) return [];
-
-    const clientsMap = new Map();
-    clients?.forEach((client) => {
-      clientsMap.set(client.id, client);
-    });
-
-    let completeAccountsInfo = allAccounts.map((account) => {
-      let clientName = account.clientName;
-
-      const accountWithClientId = account as any;
-      if (!clientName && accountWithClientId.clientId) {
-        const clientData = clientsMap.get(accountWithClientId.clientId);
-        clientName = clientData?.person?.name;
-      }
-
-      return {
-        ...account,
-        clientName: clientName || "Cliente desconocido",
-      };
-    });
-
-    if (selectedClient) {
-      completeAccountsInfo = completeAccountsInfo.filter(
-        (account) => account.clientName === selectedClient.person.name
-      );
-    }
-
-    return completeAccountsInfo;
-  }, [allAccounts, clients, selectedClient]);
 
   const handleSearch = useCallback((query: string) => {
     console.log("Searching accounts for:", query);
@@ -61,18 +30,10 @@ export const useAccountsPage = () => {
 
   const handleRowClick = useCallback(
     (account: AccountListItem) => {
-      console.log("Selected account:", account);
-
-      setSelectedAccount(account);
-
-      navigate({ to: "/movements" });
+      handleAccountSelection(account);
     },
-    [setSelectedAccount, navigate]
+    [handleAccountSelection]
   );
-
-  const handleClearClientFilter = useCallback(() => {
-    clearSelectedClient();
-  }, [clearSelectedClient]);
 
   const handleDeleteAccount = useCallback(
     (account: AccountListItem) => {

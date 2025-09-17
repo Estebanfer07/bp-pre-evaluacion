@@ -14,7 +14,7 @@ export const useClientsQueries = () => {
   const handleError = (error: AxiosError, operation: string) => {
     console.error(`Error ${operation}:`, error);
     const message =
-      (error.response?.data as any)?.message ||
+      (error.response?.data as any)?.details ||
       error.message ||
       `Failed to ${operation}`;
     alert(`Error: ${message}`);

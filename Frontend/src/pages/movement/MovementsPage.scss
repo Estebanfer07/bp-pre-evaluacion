@@ -1,6 +1,70 @@
 @use "../../styles" as *;
 @use "sass:color";
 
+// Action buttons container
+.action-buttons {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+
+  @media (max-width: #{$breakpoint-sm}) {
+    flex-direction: column;
+    gap: $spacing-sm;
+    width: 100%;
+  }
+}
+
+// Create button styling
+.create-btn {
+  padding: $spacing-md $spacing-lg;
+  background-color: $success-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($success-color, $lightness: -10%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($success-color, 0.25);
+  }
+
+  // Add a plus icon using pseudo-element
+  &::before {
+    content: "+";
+    font-size: $font-size-lg;
+    font-weight: bold;
+  }
+
+  @media (max-width: #{$breakpoint-sm}) {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
 // Movements page specific styles
 .pdf-report-btn {
   padding: $spacing-md $spacing-lg;
@@ -47,6 +111,7 @@
 
   @media (max-width: #{$breakpoint-sm}) {
     justify-content: center;
+    width: 100%;
   }
 }
 

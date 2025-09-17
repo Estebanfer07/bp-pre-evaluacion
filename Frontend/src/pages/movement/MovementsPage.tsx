@@ -1,7 +1,7 @@
 import React from "react";
-import { Table } from "../../components";
+import { Table, MovementModal } from "../../components";
 import { useMovementsPage } from "./useMovementsPage";
-import { useAccountsStore } from "../../store";
+import { useAccountsStore, useMovementsStore } from "../../store";
 import "../pages.scss";
 import "./MovementsPage.scss";
 
@@ -20,6 +20,12 @@ export const MovementsPage: React.FC = () => {
   } = useMovementsPage();
 
   const { selectedAccount } = useAccountsStore();
+  const { isModalOpen, openModal, closeModal } = useMovementsStore();
+
+  const handleModalSuccess = () => {
+    // Modal will close automatically via closeModal
+    // Queries will be invalidated by the mutation
+  };
 
   if (error) {
     return (
@@ -67,14 +73,19 @@ export const MovementsPage: React.FC = () => {
               onChange={(e) => handleSearch(e.target.value)}
               className="search-input"
             />
-            <button
-              onClick={handleGeneratePdfReport}
-              disabled={isGeneratingReport}
-              className="pdf-report-btn"
-              type="button"
-            >
-              {isGeneratingReport ? "Generando..." : "Descargar PDF"}
-            </button>
+            <div className="action-buttons">
+              <button onClick={openModal} className="create-btn" type="button">
+                Nuevo Movimiento
+              </button>
+              <button
+                onClick={handleGeneratePdfReport}
+                disabled={isGeneratingReport}
+                className="pdf-report-btn"
+                type="button"
+              >
+                {isGeneratingReport ? "Generando..." : "Descargar PDF"}
+              </button>
+            </div>
           </div>
         </div>
         <Table
@@ -84,6 +95,12 @@ export const MovementsPage: React.FC = () => {
           onRowClick={handleRowClick}
         />
       </div>
+
+      <MovementModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        onSuccess={handleModalSuccess}
+      />
     </div>
   );
 };
