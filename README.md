@@ -13,7 +13,7 @@ Esta aplicación es la solución propuesta al test técnico. El sistema está co
   - **React Hook Form**: Gestión eficiente de formularios, simplificando la validación y el manejo de datos de entrada.
 
 - **Backend API**: Servicio principal desarrollado en Java con Spring Boot, encargado de toda la lógica de negocio y operaciones centrales, como la gestión de cuentas, movimientos y clientes.
-- **Servicio de Reportes**: Microservicio independiente en Java Spring Boot, dedicado exclusivamente a la generación de reportes en PDF, permitiendo separar la lógica de generación de documentos del resto de la aplicación.
+- **Servicio de Reportes**: Microservicio independiente en Java Spring Boot (no es parte de la solución solicitada, es un proyecto aparte que reutilicé para poder generar los reportes de una mejor manera), dedicado exclusivamente a la generación de reportes en PDF, permitiendo separar la lógica de generación de documentos del resto de la aplicación.
 - **Base de datos**: PostgreSQL, utilizada para el almacenamiento seguro y persistente de toda la información relevante del sistema.
 
 Todos los servicios están containerizados y se pueden iniciar fácilmente con Docker Compose, lo que simplifica el despliegue y la integración entre componentes.
@@ -39,3 +39,4 @@ docker-compose up -d
 - Backend API: http://localhost:8081
 - Servicio de Reportes: http://localhost:8083
 - Base de datos: localhost:5432
+- 
