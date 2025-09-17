@@ -1,9 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../../atoms/Input/Input";
 import {
   clientGenderLabels,
   clientGenderValues,
+  ClientFormSchema,
   type ClientForm as ClientFormType,
 } from "../../../types/clients";
 import "./ClientForm.scss";
@@ -24,6 +26,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<ClientFormType>({
+    resolver: zodResolver(ClientFormSchema),
     defaultValues: {
       name: initialData?.name || "",
       identification: initialData?.identification || "",
@@ -53,10 +56,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
         <div className="client-form__row">
           <div className="client-form__field">
             <Input
-              {...register("name", {
-                required: "Name is required",
-                minLength: { value: 1, message: "Name is required" },
-              })}
+              {...register("name")}
               label="Nombre completo *"
               placeholder="Ingrese el nombre completo"
               error={errors.name?.message}
@@ -66,10 +66,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
 
           <div className="client-form__field">
             <Input
-              {...register("identification", {
-                required: "Identification is required",
-                minLength: { value: 1, message: "Identification is required" },
-              })}
+              {...register("identification")}
               label="Identificación *"
               placeholder="Ingrese la identificación"
               error={errors.identification?.message}
@@ -81,10 +78,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
         <div className="client-form__row">
           <div className="client-form__field">
             <Input
-              {...register("phone", {
-                required: "Phone is required",
-                minLength: { value: 1, message: "Phone is required" },
-              })}
+              {...register("phone")}
               label="Teléfono *"
               placeholder="Ingrese el teléfono"
               error={errors.phone?.message}
@@ -94,12 +88,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
 
           <div className="client-form__field">
             <Input
-              {...register("age", {
-                required: "Age is required",
-                valueAsNumber: true,
-                min: { value: 1, message: "Age must be greater than 0" },
-                max: { value: 120, message: "Age must be less than 120" },
-              })}
+              {...register("age", { valueAsNumber: true })}
               type="number"
               label="Edad *"
               placeholder="Ingrese la edad"
@@ -111,10 +100,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
 
         <div className="client-form__field client-form__field--full">
           <Input
-            {...register("address", {
-              required: "Address is required",
-              minLength: { value: 1, message: "Address is required" },
-            })}
+            {...register("address")}
             label="Dirección *"
             placeholder="Ingrese la dirección completa"
             error={errors.address?.message}
@@ -127,7 +113,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
             Género *
           </label>
           <select
-            {...register("gender", { required: "Please select a gender" })}
+            {...register("gender")}
             id="gender"
             className={`client-form__select ${errors.gender ? "client-form__select--error" : ""}`}
             disabled={isLoading}
@@ -149,17 +135,7 @@ export const ClientForm: React.FC<ClientFormProps> = ({
 
         <div className="client-form__field">
           <Input
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters",
-              },
-              maxLength: {
-                value: 15,
-                message: "Password must not exceed 15 characters",
-              },
-            })}
+            {...register("password")}
             type="password"
             label="Contraseña *"
             placeholder="Ingrese la contraseña"

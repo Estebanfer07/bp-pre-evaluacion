@@ -21,7 +21,6 @@ export const ClientModal: React.FC<ClientModalProps> = ({
   const createClientMutation = useCreateClient();
 
   const handleFormSubmit = (formData: ClientFormType) => {
-    // Transform form data to match API requirements
     const clientData: CreateClientWithPerson = {
       name: formData.name,
       identification: formData.identification,
@@ -41,16 +40,13 @@ export const ClientModal: React.FC<ClientModalProps> = ({
       },
       onError: (error) => {
         console.error("Error creating client:", error);
-        // Error handling is already done in the mutation
       },
     });
   };
 
   const handleSave = () => {
-    // Form submission is handled by the form's submit event
     const form = document.querySelector(".client-form") as HTMLFormElement;
     if (form) {
-      // Trigger form validation and submission
       const submitEvent = new Event("submit", {
         bubbles: true,
         cancelable: true,

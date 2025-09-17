@@ -67,15 +67,20 @@ export const ClientsListResponseSchema = z.array(ClientResponseSchema);
 export type ClientsListResponse = z.infer<typeof ClientsListResponseSchema>;
 
 export const ClientFormSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  identification: z.string().min(1, "Identification is required"),
-  phone: z.string().min(1, "Phone is required"),
-  address: z.string().min(1, "Address is required"),
-  age: z.number().min(1, "Age must be greater than 0"),
+  name: z.string().min(1, "Nombre es obligatorio"),
+  identification: z.string().min(1, "La identificación es obligatoria"),
+  phone: z.string().min(1, "El teléfono es obligatorio"),
+  address: z.string().min(1, "La dirección es obligatoria"),
+  age: z
+    .number("La edad debe ser mayor que 0")
+    .min(1, "La edad debe ser mayor que 0"),
   gender: ClientGenderSchema.refine((val) => !!val, {
-    message: "Please select a gender",
+    message: "Por favor seleccione un género",
   }),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z
+    .string()
+    .min(8, "La contraseña debe tener al menos 8 caracteres")
+    .max(15, "La contraseña no debe exceder los 15 caracteres"),
 });
 
 export type ClientForm = z.infer<typeof ClientFormSchema>;

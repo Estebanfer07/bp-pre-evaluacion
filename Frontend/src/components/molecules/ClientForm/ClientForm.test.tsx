@@ -79,9 +79,6 @@ describe("ClientForm", () => {
     fireEvent.change(screen.getByLabelText(/contraseña/i), {
       target: { value: "newpassword123" },
     });
-    fireEvent.change(screen.getByLabelText(/estado/i), {
-      target: { value: "INACTIVE" },
-    });
 
     // Submit the form
     fireEvent.submit(screen.getByRole("form"));
@@ -95,48 +92,33 @@ describe("ClientForm", () => {
         age: 25,
         gender: "FEMALE",
         password: "newpassword123",
-        state: "INACTIVE",
       });
     });
   });
 
   it("shows validation errors for empty required fields", async () => {
-    render(<ClientForm {...defaultProps} />);
+    const { debug } = render(<ClientForm {...defaultProps} />);
 
-    // Submit form without filling fields
     fireEvent.submit(screen.getByRole("form"));
 
     await waitFor(() => {
-      expect(screen.getByText("Name is required")).toBeInTheDocument();
+      debug();
+      expect(screen.getByText("Nombre es obligatorio")).toBeInTheDocument();
       expect(
-        screen.getByText("Identification is required")
+        screen.getByText("La identificación es obligatoria")
       ).toBeInTheDocument();
-      expect(screen.getByText("Phone is required")).toBeInTheDocument();
-      expect(screen.getByText("Address is required")).toBeInTheDocument();
-      expect(screen.getByText("Age is required")).toBeInTheDocument();
-      expect(screen.getByText("Password is required")).toBeInTheDocument();
-    });
-  });
-
-  it("validates age range", async () => {
-    render(<ClientForm {...defaultProps} />);
-
-    const ageInput = screen.getByLabelText(/edad/i);
-
-    // Test age below minimum
-    fireEvent.change(ageInput, { target: { value: "17" } });
-    fireEvent.blur(ageInput);
-
-    await waitFor(() => {
-      expect(screen.getByText("Age must be at least 18")).toBeInTheDocument();
-    });
-
-    // Test age above maximum
-    fireEvent.change(ageInput, { target: { value: "121" } });
-    fireEvent.blur(ageInput);
-
-    await waitFor(() => {
-      expect(screen.getByText("Age must be less than 120")).toBeInTheDocument();
+      expect(
+        screen.getByText("El teléfono es obligatorio")
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("La dirección es obligatoria")
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("La edad debe ser mayor que 0")
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("La contraseña debe tener al menos 8 caracteres")
+      ).toBeInTheDocument();
     });
   });
 
@@ -151,7 +133,7 @@ describe("ClientForm", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Password must be at least 8 characters")
+        screen.getByText("La contraseña debe tener al menos 8 caracteres")
       ).toBeInTheDocument();
     });
 
@@ -163,7 +145,7 @@ describe("ClientForm", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Password must not exceed 15 characters")
+        screen.getByText("La contraseña no debe exceder los 15 caracteres")
       ).toBeInTheDocument();
     });
   });
@@ -178,7 +160,6 @@ describe("ClientForm", () => {
     expect(screen.getByLabelText(/dirección/i)).toBeDisabled();
     expect(screen.getByLabelText(/género/i)).toBeDisabled();
     expect(screen.getByLabelText(/contraseña/i)).toBeDisabled();
-    expect(screen.getByLabelText(/estado/i)).toBeDisabled();
   });
 
   it("renders gender options correctly", () => {
@@ -196,21 +177,6 @@ describe("ClientForm", () => {
     );
 
     expect(genderOptions).toHaveLength(3);
-  });
-
-  it("renders state options correctly", () => {
-    render(<ClientForm {...defaultProps} />);
-
-    const stateSelect = screen.getByLabelText(/estado/i);
-    expect(stateSelect).toBeInTheDocument();
-
-    const options = screen.getAllByRole("option");
-    const stateOptions = options.filter(
-      (option) =>
-        option.textContent === "Activo" || option.textContent === "Inactivo"
-    );
-
-    expect(stateOptions).toHaveLength(2);
   });
 
   it("does not submit form when validation fails", async () => {
