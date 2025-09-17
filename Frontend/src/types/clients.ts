@@ -51,18 +51,7 @@ export type Client = z.infer<typeof ClientSchema>;
 export const ClientResponseSchema = ClientSchema.omit({ password: true });
 export type ClientResponse = z.infer<typeof ClientResponseSchema>;
 
-export const ClientListItemSchema = z.object({
-  id: z.uuid(),
-  person: z.object({
-    name: z.string(),
-    identification: z.string(),
-    phone: z.string(),
-  }),
-  state: ClientStateSchema,
-  createdAt: z.iso.datetime(),
-});
-
-export type ClientListItem = z.infer<typeof ClientListItemSchema>;
+export type ClientListItem = z.infer<typeof ClientSchema>;
 
 export const ClientsListResponseSchema = z.array(ClientResponseSchema);
 export type ClientsListResponse = z.infer<typeof ClientsListResponseSchema>;

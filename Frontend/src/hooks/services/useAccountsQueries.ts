@@ -121,7 +121,7 @@ export const useAccountsQueries = () => {
         data: UpdateAccount;
       }): Promise<Account> => {
         try {
-          const response = await apiClient.put<Account>(
+          const response = await apiClient.patch<Account>(
             `/accounts/${id}`,
             data
           );

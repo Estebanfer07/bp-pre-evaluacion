@@ -34,7 +34,6 @@ export const ClientModal: React.FC<ClientModalProps> = ({
 
   const handleFormSubmit = (formData: ClientFormType) => {
     if (editMode && initialData) {
-      // Update existing client
       const updateData: UpdateClientWithPerson = {
         name: formData.name,
         identification: formData.identification,
@@ -60,7 +59,6 @@ export const ClientModal: React.FC<ClientModalProps> = ({
         }
       );
     } else {
-      // Create new client
       const clientData: CreateClientWithPerson = {
         name: formData.name,
         identification: formData.identification,
@@ -103,7 +101,6 @@ export const ClientModal: React.FC<ClientModalProps> = ({
     }
   };
 
-  // Convert ClientListItem to ClientFormType for editing
   const getInitialFormData = (): Partial<ClientFormType> | undefined => {
     if (!editMode || !initialData) {
       return undefined;
@@ -113,10 +110,10 @@ export const ClientModal: React.FC<ClientModalProps> = ({
       name: initialData.person.name,
       identification: initialData.person.identification,
       phone: initialData.person.phone,
-      address: "", // Address not available in ClientListItem, will need to fetch full client data
-      age: 0, // Age not available in ClientListItem, will need to fetch full client data
-      gender: "MALE", // Gender not available in ClientListItem, will need to fetch full client data
-      password: "", // Never pre-populate password for security
+      address: initialData.person.address,
+      age: initialData.person.age,
+      gender: initialData.person.gender,
+      password: "",
     };
   };
 

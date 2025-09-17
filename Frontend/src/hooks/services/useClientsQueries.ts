@@ -101,7 +101,7 @@ export const useClientsQueries = () => {
         data: UpdateClientWithPerson;
       }): Promise<ClientResponse> => {
         try {
-          const response = await apiClient.put<ClientResponse>(
+          const response = await apiClient.patch<ClientResponse>(
             `/clients/${id}`,
             data
           );
