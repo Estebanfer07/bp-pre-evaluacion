@@ -14,10 +14,11 @@ export const useAccountsPage = () => {
   const navigate = useNavigate();
   const { selectedClient, clearSelectedClient } = useClientsStore();
   const { setSelectedAccount } = useAccountsStore();
-  const { useGetAccounts } = useAccountsQueries();
+  const { useGetAccounts, useDeleteAccount } = useAccountsQueries();
   const { useGetClients } = useClientsQueries();
 
   const { data: allAccounts, isLoading, error } = useGetAccounts(searchTerm);
+  const deleteAccountMutation = useDeleteAccount();
 
   const { data: clients } = useGetClients();
 
@@ -72,6 +73,19 @@ export const useAccountsPage = () => {
   const handleClearClientFilter = useCallback(() => {
     clearSelectedClient();
   }, [clearSelectedClient]);
+
+  const handleDeleteAccount = useCallback(
+    (account: AccountListItem) => {
+      if (
+        window.confirm(
+          `¿Está seguro de que desea eliminar la cuenta ${account.accountNumber}?`
+        )
+      ) {
+        deleteAccountMutation.mutate(account.id);
+      }
+    },
+    [deleteAccountMutation]
+  );
 
   const tableColumns: TableColumn<AccountListItem>[] = [
     {
@@ -141,6 +155,26 @@ export const useAccountsPage = () => {
         return date.toLocaleDateString("es-CO");
       },
     },
+    {
+      key: "actions",
+      title: "Acciones",
+      align: "center",
+      width: "10%",
+      render: (_, record) => (
+        <button
+          className="delete-btn"
+          type="button"
+          aria-label={`Eliminar cuenta ${record.accountNumber}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteAccount(record);
+          }}
+          disabled={deleteAccountMutation.isPending}
+        >
+          {deleteAccountMutation.isPending ? "..." : "🗑️"}
+        </button>
+      ),
+    },
   ];
 
   return {
@@ -152,5 +186,7 @@ export const useAccountsPage = () => {
     handleRowClick,
     selectedClient,
     handleClearClientFilter,
+    handleDeleteAccount,
+    isDeleting: deleteAccountMutation.isPending,
   };
 };

@@ -9,9 +9,10 @@ export const useClientsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
   const { setSelectedClient } = useClientsStore();
-  const { useGetClients } = useClientsQueries();
+  const { useGetClients, useDeleteClient } = useClientsQueries();
 
   const { data: clients, isLoading, error } = useGetClients(searchTerm);
+  const deleteClientMutation = useDeleteClient();
 
   const handleSearch = useCallback((query: string) => {
     console.log("Searching for:", query);
@@ -25,6 +26,19 @@ export const useClientsPage = () => {
       navigate({ to: "/accounts" });
     },
     [setSelectedClient, navigate]
+  );
+
+  const handleDeleteClient = useCallback(
+    (client: ClientListItem) => {
+      if (
+        window.confirm(
+          `¿Está seguro de que desea eliminar al cliente ${client.person.name}?`
+        )
+      ) {
+        deleteClientMutation.mutate(client.id);
+      }
+    },
+    [deleteClientMutation]
   );
 
   const tableColumns: TableColumn<ClientListItem>[] = [
@@ -72,6 +86,26 @@ export const useClientsPage = () => {
         return date.toLocaleDateString("es-CO");
       },
     },
+    {
+      key: "actions",
+      title: "Acciones",
+      align: "center",
+      width: "10%",
+      render: (_, record) => (
+        <button
+          className="delete-btn"
+          type="button"
+          aria-label={`Eliminar cliente ${record.person.name}`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleDeleteClient(record);
+          }}
+          disabled={deleteClientMutation.isPending}
+        >
+          {deleteClientMutation.isPending ? "..." : "🗑️"}
+        </button>
+      ),
+    },
   ];
 
   return {
@@ -81,5 +115,7 @@ export const useClientsPage = () => {
     error,
     handleSearch,
     handleRowClick,
+    handleDeleteClient,
+    isDeleting: deleteClientMutation.isPending,
   };
 };

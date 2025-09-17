@@ -107,3 +107,31 @@
     color: #d32f2f;
   }
 }
+
+// Action buttons
+.reverse-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: $border-radius-sm;
+  transition: all 0.2s ease;
+  color: $error-color;
+
+  &:hover:not(:disabled) {
+    background-color: rgba(40, 167, 69, 0.1);
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    color: #6c757d;
+  }
+
+  &:focus {
+    outline: 2px solid rgba(40, 167, 69, 0.3);
+    outline-offset: 2px;
+  }
+}

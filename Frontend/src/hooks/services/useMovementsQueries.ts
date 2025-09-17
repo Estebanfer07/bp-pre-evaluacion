@@ -121,7 +121,7 @@ export const useMovementsQueries = () => {
     });
   };
 
-  const useDeleteMovement = () => {
+  const useReverseMovement = () => {
     return useMutation({
       mutationFn: async (id: string): Promise<void> => {
         try {
@@ -135,7 +135,7 @@ export const useMovementsQueries = () => {
         queryClient.invalidateQueries({ queryKey: ["movements"] });
         queryClient.removeQueries({ queryKey: ["movements", id] });
         queryClient.invalidateQueries({ queryKey: ["accounts"] });
-        alert("Movement deleted successfully!");
+        alert("Movement reversed successfully!");
       },
     });
   };
@@ -185,7 +185,7 @@ export const useMovementsQueries = () => {
     useGetMovements,
     useGetMovement,
     useCreateMovement,
-    useDeleteMovement,
+    useReverseMovement,
     useGenerateMovementReport,
   };
 };

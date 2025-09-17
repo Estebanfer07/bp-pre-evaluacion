@@ -18,7 +18,8 @@ interface ColumnDefinition<T> {
 export const useMovementsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { selectedAccount, clearSelectedAccount } = useAccountsStore();
-  const { useGetMovements, useGenerateMovementReport } = useMovementsQueries();
+  const { useGetMovements, useGenerateMovementReport, useReverseMovement } =
+    useMovementsQueries();
 
   const {
     data: allMovements,
@@ -29,6 +30,7 @@ export const useMovementsPage = () => {
   const movements = allMovements || [];
 
   const generateReportMutation = useGenerateMovementReport();
+  const reverseMovementMutation = useReverseMovement();
 
   const handleGeneratePdfReport = useCallback(async () => {
     try {
@@ -58,6 +60,19 @@ export const useMovementsPage = () => {
   const handleClearAccountFilter = useCallback(() => {
     clearSelectedAccount();
   }, [clearSelectedAccount]);
+
+  const handleReverseMovement = useCallback(
+    (movement: MovementListItem) => {
+      if (
+        window.confirm(
+          `¿Está seguro de que desea reversar este movimiento por $${movement.amount.toFixed(2)}?`
+        )
+      ) {
+        reverseMovementMutation.mutate(movement.id);
+      }
+    },
+    [reverseMovementMutation]
+  );
 
   const filteredMovements = useMemo(() => {
     if (!searchTerm) return movements;
@@ -169,8 +184,28 @@ export const useMovementsPage = () => {
         width: "15%",
         render: (_, record) => record.accountNumber || record.accountId,
       },
+      {
+        key: "actions",
+        title: "Acciones",
+        align: "center",
+        width: "10%",
+        render: (_, record) => (
+          <button
+            className="reverse-btn"
+            type="button"
+            aria-label={`Reversar movimiento de $${record.amount.toFixed(2)}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleReverseMovement(record);
+            }}
+            disabled={record.isReversed || reverseMovementMutation.isPending}
+          >
+            ↶
+          </button>
+        ),
+      },
     ],
-    []
+    [handleReverseMovement, reverseMovementMutation.isPending]
   );
 
   return {
@@ -184,5 +219,7 @@ export const useMovementsPage = () => {
     handleGeneratePdfReport,
     isGeneratingReport: generateReportMutation.isPending,
     searchQuery: searchTerm,
+    handleReverseMovement,
+    isReversing: reverseMovementMutation.isPending,
   };
 };
