@@ -1,5 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "../../test/utils/test-utils";
+import {
+  render,
+  screen,
+  waitFor,
+  fireEvent,
+} from "../../test/utils/test-utils";
 import { ClientsPage } from "./ClientsPage";
 import { mockClientListItems } from "../../test/utils/mocks/clients/mockClients";
 
@@ -34,10 +39,10 @@ describe("ClientsPage (with axios mocking)", () => {
     });
   });
 
-  it("renders page title and Nuevo button", async () => {
+  it("renders page title and Nuevo Cliente button", async () => {
     render(<ClientsPage />);
     expect(screen.getByText("Clientes")).toBeInTheDocument();
-    expect(screen.getByText("Nuevo")).toBeInTheDocument();
+    expect(screen.getByText("Nuevo Cliente")).toBeInTheDocument();
   });
 
   it("renders search input", () => {
@@ -132,5 +137,50 @@ describe("ClientsPage (with axios mocking)", () => {
     });
 
     window.confirm = originalConfirm;
+  });
+
+  it("opens client modal when 'Nuevo Cliente' button is clicked", async () => {
+    render(<ClientsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    const newClientButton = screen.getByText("Nuevo Cliente");
+    fireEvent.click(newClientButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Información Personal")).toBeInTheDocument();
+      expect(screen.getByText("Información de Cuenta")).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /crear cliente/i })
+      ).toBeInTheDocument();
+    });
+  });
+
+  it("closes modal when cancel button is clicked", async () => {
+    render(<ClientsPage />);
+
+    await waitFor(() => {
+      expect(mockedApiClient.get).toHaveBeenCalledWith("/clients");
+    });
+
+    // Open modal
+    const newClientButton = screen.getByText("Nuevo Cliente");
+    fireEvent.click(newClientButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Información Personal")).toBeInTheDocument();
+    });
+
+    // Close modal
+    const cancelButton = screen.getByRole("button", { name: /cancelar/i });
+    fireEvent.click(cancelButton);
+
+    await waitFor(() => {
+      expect(
+        screen.queryByText("Información Personal")
+      ).not.toBeInTheDocument();
+    });
   });
 });

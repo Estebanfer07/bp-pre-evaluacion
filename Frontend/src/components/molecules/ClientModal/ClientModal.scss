@@ -1,0 +1,45 @@
+@use "../../../styles" as *;
+
+.client-modal {
+  &__content {
+    max-height: 60vh;
+    overflow-y: auto;
+    padding: 0;
+  }
+}
+
+// Override modal styles for better form experience
+.modal {
+  .client-modal__content {
+    // Ensure smooth scrolling
+    scroll-behavior: smooth;
+
+    // Custom scrollbar styling
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #c1c1c1;
+      border-radius: 4px;
+
+      &:hover {
+        background: #a8a8a8;
+      }
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .client-modal {
+    &__content {
+      max-height: 50vh;
+    }
+  }
+}

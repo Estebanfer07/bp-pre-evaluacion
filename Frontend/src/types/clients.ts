@@ -1,15 +1,24 @@
 import { z } from "zod";
 import { CreatePersonSchema, UpdatePersonSchema, PersonSchema } from "./person";
 
-export const ClientStateSchema = z.enum(["ACTIVE", "INACTIVE"]);
+export const clientStateValues = ["ACTIVE", "INACTIVE"] as const;
+export const ClientStateSchema = z.enum(clientStateValues);
 export type ClientState = z.infer<typeof ClientStateSchema>;
+
+export const clientGenderValues = ["MALE", "FEMALE", "OTHER"] as const;
+export const clientGenderLabels = {
+  MALE: "Masculino",
+  FEMALE: "Femenino",
+  OTHER: "Otro",
+};
+export const ClientGenderSchema = z.enum(clientGenderValues);
+export type ClientGender = z.infer<typeof ClientGenderSchema>;
 
 export const CreateClientWithPersonSchema = CreatePersonSchema.extend({
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(15, "Password must not exceed 15 characters"),
-  state: ClientStateSchema,
 });
 
 export const UpdateClientWithPersonSchema = UpdatePersonSchema.extend({
@@ -18,7 +27,6 @@ export const UpdateClientWithPersonSchema = UpdatePersonSchema.extend({
     .min(8, "Password must be at least 8 characters")
     .max(15, "Password must not exceed 15 characters")
     .optional(),
-  state: ClientStateSchema.optional(),
 });
 
 export type CreateClientWithPerson = z.infer<
@@ -64,14 +72,10 @@ export const ClientFormSchema = z.object({
   phone: z.string().min(1, "Phone is required"),
   address: z.string().min(1, "Address is required"),
   age: z.number().min(1, "Age must be greater than 0"),
-  gender: z.enum(["MALE", "FEMALE", "OTHER"], {
+  gender: ClientGenderSchema.refine((val) => !!val, {
     message: "Please select a gender",
   }),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  state: ClientStateSchema.refine(
-    (val) => val === "ACTIVE" || val === "INACTIVE",
-    { message: "Please select a client state" }
-  ),
 });
 
 export type ClientForm = z.infer<typeof ClientFormSchema>;

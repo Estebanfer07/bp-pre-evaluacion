@@ -1,8 +1,8 @@
-import React from 'react';
-import './Input.scss';
+import React from "react";
+import "./Input.scss";
 
 export interface InputProps {
-  type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'search';
+  type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search";
   placeholder?: string;
   value?: string;
   defaultValue?: string;
@@ -19,7 +19,7 @@ export interface InputProps {
 }
 
 export const Input: React.FC<InputProps> = ({
-  type = 'text',
+  type = "text",
   placeholder,
   value,
   defaultValue,
@@ -27,17 +27,20 @@ export const Input: React.FC<InputProps> = ({
   required = false,
   label,
   error,
-  className = '',
+  className = "",
   name,
   id,
   onChange,
   onBlur,
   onFocus,
+  ...register
 }) => {
-  const inputId = id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
+  const inputId =
+    id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
   const hasError = Boolean(error);
-  
-  const inputClass = `input ${hasError ? 'input--error' : ''} ${className}`.trim();
+
+  const inputClass =
+    `input ${hasError ? "input--error" : ""} ${className}`.trim();
 
   return (
     <div className="input-wrapper">
@@ -48,6 +51,7 @@ export const Input: React.FC<InputProps> = ({
         </label>
       )}
       <input
+        {...register}
         type={type}
         id={inputId}
         name={name}

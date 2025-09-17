@@ -7,6 +7,7 @@ import type { ClientListItem } from "../../types";
 
 export const useClientsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const { setSelectedClient } = useClientsStore();
   const { useGetClients, useDeleteClient } = useClientsQueries();
@@ -40,6 +41,20 @@ export const useClientsPage = () => {
     },
     [deleteClientMutation]
   );
+
+  const handleOpenModal = useCallback(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+  }, []);
+
+  const handleClientCreated = useCallback(() => {
+    console.log("Client created successfully");
+    // Modal will be closed automatically by ClientModal
+    // Query will be invalidated automatically by the mutation
+  }, []);
 
   const tableColumns: TableColumn<ClientListItem>[] = [
     {
@@ -117,5 +132,9 @@ export const useClientsPage = () => {
     handleRowClick,
     handleDeleteClient,
     isDeleting: deleteClientMutation.isPending,
+    isModalOpen,
+    handleOpenModal,
+    handleCloseModal,
+    handleClientCreated,
   };
 };

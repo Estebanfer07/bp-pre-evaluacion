@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, SearchInput, Table } from "../../components";
+import { Button, SearchInput, Table, ClientModal } from "../../components";
 import "../pages.scss";
 import "./ClientsPage.scss";
 import { useClientsPage } from "./useClientsPage";
@@ -12,6 +12,10 @@ export const ClientsPage: React.FC = () => {
     error,
     handleSearch,
     handleRowClick,
+    isModalOpen,
+    handleOpenModal,
+    handleCloseModal,
+    handleClientCreated,
   } = useClientsPage();
 
   if (error) {
@@ -33,7 +37,9 @@ export const ClientsPage: React.FC = () => {
     <div className="page">
       <div className="page__header">
         <h1>Clientes</h1>
-        <Button variant="primary">Nuevo</Button>
+        <Button variant="primary" onClick={handleOpenModal}>
+          Nuevo Cliente
+        </Button>
       </div>
       <div className="page__content">
         <div className="search-section">
@@ -54,6 +60,12 @@ export const ClientsPage: React.FC = () => {
           />
         </div>
       </div>
+
+      <ClientModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onSuccess={handleClientCreated}
+      />
     </div>
   );
 };
