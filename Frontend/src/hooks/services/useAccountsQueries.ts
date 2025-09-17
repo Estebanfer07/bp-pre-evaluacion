@@ -173,6 +173,3 @@ export const useAccountsQueries = () => {
     useDeleteAccount,
   };
 };
-function useGetClients(): { data: any } {
-  throw new Error("Function not implemented.");
-}

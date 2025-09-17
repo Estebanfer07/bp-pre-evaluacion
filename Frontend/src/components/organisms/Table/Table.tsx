@@ -1,5 +1,5 @@
 import React from "react";
-import "./table.scss";
+import "./Table.scss";
 
 export interface TableColumn<T = any> {
   key: string;

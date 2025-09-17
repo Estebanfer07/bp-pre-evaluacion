@@ -92,12 +92,20 @@ export const mockClientListItems: ClientListItem[] = mockClients.map(
   (client) => ({
     id: client.id,
     person: {
+      id: client.person.id,
       name: client.person.name,
+      gender: client.person.gender,
+      age: client.person.age,
       identification: client.person.identification,
+      address: client.person.address,
       phone: client.person.phone,
+      createdAt: client.person.createdAt,
+      updatedAt: client.person.updatedAt,
     },
+    password: "", // mock password, adjust as needed
     state: client.state,
     createdAt: client.createdAt,
+    updatedAt: client.updatedAt,
   })
 );
 

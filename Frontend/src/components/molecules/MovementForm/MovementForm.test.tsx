@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MovementForm } from "./MovementForm";
 import { render, screen } from "../../../test/utils/test-utils";
 
@@ -12,7 +11,6 @@ vi.mock("../../../hooks/services/useAccountsQueries", () => ({
 
 describe("MovementForm", () => {
   const mockOnSubmit = vi.fn();
-  let queryClient: QueryClient;
 
   const defaultProps = {
     onSubmit: mockOnSubmit,
@@ -20,15 +18,7 @@ describe("MovementForm", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    queryClient = new QueryClient({
-      defaultOptions: {
-        queries: {
-          retry: false,
-        },
-      },
-    });
 
-    // Mock the accounts query hook
     mockUseAccountsQueries.mockReturnValue({
       useGetAccounts: () => ({
         data: [
@@ -62,7 +52,6 @@ describe("MovementForm", () => {
   it("renders movement type options", () => {
     render(<MovementForm {...defaultProps} />);
 
-    // Check that the select has the expected options
     const depositOption = screen.getByRole("option", { name: "Depósito" });
     const withdrawalOption = screen.getByRole("option", { name: "Retiro" });
 
