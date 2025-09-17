@@ -75,8 +75,20 @@
   margin-bottom: $spacing-lg;
 }
 
+.search-controls {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+
+  @media (max-width: #{$breakpoint-sm}) {
+    flex-direction: column;
+    gap: $spacing-sm;
+    align-items: stretch;
+  }
+}
+
 .search-input {
-  width: 100%;
+  flex: 1;
   padding: $spacing-md;
   border: 1px solid $border-color-light;
   border-radius: $border-radius-md;
@@ -269,4 +281,52 @@
   border: 1px solid #f5c6cb;
   border-radius: $border-radius-md;
   margin: $spacing-lg 0;
+}
+
+.pdf-report-btn {
+  padding: $spacing-md $spacing-lg;
+  background-color: $info-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($info-color, $lightness: -10%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($info-color, 0.25);
+  }
+
+  // Add a PDF icon using pseudo-element
+  &::before {
+    content: "📄";
+    font-size: $font-size-sm;
+  }
+
+  @media (max-width: #{$breakpoint-sm}) {
+    justify-content: center;
+  }
 }

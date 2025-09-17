@@ -13,6 +13,8 @@ export const MovementsPage: React.FC = () => {
     handleSearch,
     handleRowClick,
     handleClearAccountFilter,
+    handleGeneratePdfReport,
+    isGeneratingReport,
     searchQuery,
   } = useMovementsPage();
 
@@ -56,13 +58,23 @@ export const MovementsPage: React.FC = () => {
       </div>
       <div className="page__content">
         <div className="search-section">
-          <input
-            type="text"
-            placeholder="Buscar movimientos..."
-            value={searchQuery}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="search-input"
-          />
+          <div className="search-controls">
+            <input
+              type="text"
+              placeholder="Buscar movimientos..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="search-input"
+            />
+            <button
+              onClick={handleGeneratePdfReport}
+              disabled={isGeneratingReport}
+              className="pdf-report-btn"
+              type="button"
+            >
+              {isGeneratingReport ? "Generando..." : "Descargar PDF"}
+            </button>
+          </div>
         </div>
         <Table
           columns={tableColumns}

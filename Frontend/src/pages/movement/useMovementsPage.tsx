@@ -15,7 +15,7 @@ interface ColumnDefinition<T> {
 export const useMovementsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const { selectedAccount, clearSelectedAccount } = useAccountsStore();
-  const { useGetMovements } = useMovementsQueries();
+  const { useGetMovements, useGenerateMovementReport } = useMovementsQueries();
 
   // Fetch all movements, optionally filtered by selected account
   const {
@@ -28,6 +28,42 @@ export const useMovementsPage = () => {
   );
 
   const movements = allMovements || [];
+
+  // PDF report generation
+  const generateReportMutation = useGenerateMovementReport();
+
+  const handleGeneratePdfReport = useCallback(async () => {
+    try {
+      const reportData = await generateReportMutation.mutateAsync({
+        format: "PDF",
+        accountId: selectedAccount?.id,
+        // You can add date range here if needed
+        // startDate: "2025-09-01",
+        // endDate: "2025-09-15",
+      });
+
+      // Create blob from base64 PDF data
+      const byteCharacters = atob(reportData as string);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: "application/pdf" });
+
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `movimientos-${selectedAccount?.accountNumber || "todos"}-${new Date().toISOString().split("T")[0]}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error generating PDF report:", error);
+    }
+  }, [generateReportMutation, selectedAccount]);
 
   const handleSearch = useCallback((query: string) => {
     setSearchTerm(query);
@@ -166,6 +202,8 @@ export const useMovementsPage = () => {
     handleSearch,
     handleRowClick,
     handleClearAccountFilter,
+    handleGeneratePdfReport,
+    isGeneratingReport: generateReportMutation.isPending,
     searchQuery: searchTerm,
   };
 };
