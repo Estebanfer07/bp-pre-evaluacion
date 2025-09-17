@@ -29,6 +29,7 @@ export const ClientModal: React.FC<ClientModalProps> = ({
       age: formData.age,
       gender: formData.gender,
       password: formData.password,
+      state: "ACTIVE",
     };
 
     createClientMutation.mutate(clientData, {

@@ -19,6 +19,7 @@ export const CreateClientWithPersonSchema = CreatePersonSchema.extend({
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(15, "Password must not exceed 15 characters"),
+  state: ClientStateSchema.default("ACTIVE"),
 });
 
 export const UpdateClientWithPersonSchema = UpdatePersonSchema.extend({

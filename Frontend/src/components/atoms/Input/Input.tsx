@@ -1,46 +1,29 @@
 import React from "react";
 import "./Input.scss";
 
-export interface InputProps {
-  type?: "text" | "email" | "password" | "number" | "tel" | "url" | "search";
-  placeholder?: string;
-  value?: string;
-  defaultValue?: string;
-  disabled?: boolean;
-  required?: boolean;
+export interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  className?: string;
-  name?: string;
-  id?: string;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 export const Input: React.FC<InputProps> = ({
   type = "text",
-  placeholder,
-  value,
-  defaultValue,
-  disabled = false,
-  required = false,
   label,
   error,
-  className = "",
-  name,
+  className,
   id,
-  onChange,
-  onBlur,
-  onFocus,
-  ...register
+  name,
+  required,
+  ...rest
 }) => {
   const inputId =
-    id || name || `input-${Math.random().toString(36).substr(2, 9)}`;
+    id || name || `input-${Math.random().toString(36).slice(2, 9)}`;
   const hasError = Boolean(error);
 
-  const inputClass =
-    `input ${hasError ? "input--error" : ""} ${className}`.trim();
+  const inputClass = ["input", hasError && "input--error", className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className="input-wrapper">
@@ -51,19 +34,12 @@ export const Input: React.FC<InputProps> = ({
         </label>
       )}
       <input
-        {...register}
-        type={type}
         id={inputId}
         name={name}
-        className={inputClass}
-        placeholder={placeholder}
-        value={value}
-        defaultValue={defaultValue}
-        disabled={disabled}
+        type={type}
         required={required}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
+        className={inputClass}
+        {...rest} // everything else (onChange, placeholder, disabled, etc.)
       />
       {error && <span className="input-error">{error}</span>}
     </div>
