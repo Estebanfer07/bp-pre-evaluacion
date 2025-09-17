@@ -3,6 +3,7 @@ import { Table } from "../../components";
 import { useMovementsPage } from "./useMovementsPage";
 import { useAccountsStore } from "../../store";
 import "../pages.scss";
+import "./MovementsPage.scss";
 
 export const MovementsPage: React.FC = () => {
   const {

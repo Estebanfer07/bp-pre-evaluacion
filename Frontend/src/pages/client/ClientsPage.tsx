@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, SearchInput, Table } from "../../components";
 import "../pages.scss";
+import "./ClientsPage.scss";
 import { useClientsPage } from "./useClientsPage";
 
 export const ClientsPage: React.FC = () => {

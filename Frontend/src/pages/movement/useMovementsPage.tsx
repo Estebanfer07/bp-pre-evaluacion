@@ -1,9 +1,12 @@
 import { useMemo, useCallback, useState } from "react";
 import { useMovementsQueries } from "../../hooks/services";
 import { useAccountsStore } from "../../store";
+import {
+  downloadPdfFromBase64,
+  generateMovementReportFilename,
+} from "../../utils";
 import type { MovementListItem } from "../../types";
 
-// Define ColumnDefinition locally since it's not exported from Table
 interface ColumnDefinition<T> {
   key: string;
   title: string;
@@ -17,19 +20,14 @@ export const useMovementsPage = () => {
   const { selectedAccount, clearSelectedAccount } = useAccountsStore();
   const { useGetMovements, useGenerateMovementReport } = useMovementsQueries();
 
-  // Fetch all movements, optionally filtered by selected account
   const {
     data: allMovements,
     isLoading,
     error,
-  } = useGetMovements(
-    undefined, // search
-    selectedAccount?.id // accountId
-  );
+  } = useGetMovements(undefined, selectedAccount?.id);
 
   const movements = allMovements || [];
 
-  // PDF report generation
   const generateReportMutation = useGenerateMovementReport();
 
   const handleGeneratePdfReport = useCallback(async () => {
@@ -37,29 +35,13 @@ export const useMovementsPage = () => {
       const reportData = await generateReportMutation.mutateAsync({
         format: "PDF",
         accountId: selectedAccount?.id,
-        // You can add date range here if needed
-        // startDate: "2025-09-01",
-        // endDate: "2025-09-15",
       });
 
-      // Create blob from base64 PDF data
-      const byteCharacters = atob(reportData as string);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
-      }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray], { type: "application/pdf" });
-
-      // Create download link
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `movimientos-${selectedAccount?.accountNumber || "todos"}-${new Date().toISOString().split("T")[0]}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      const filename = generateMovementReportFilename(
+        selectedAccount?.accountNumber,
+        "PDF"
+      );
+      downloadPdfFromBase64(reportData as string, filename);
     } catch (error) {
       console.error("Error generating PDF report:", error);
     }
@@ -77,7 +59,6 @@ export const useMovementsPage = () => {
     clearSelectedAccount();
   }, [clearSelectedAccount]);
 
-  // Filter movements based on search term
   const filteredMovements = useMemo(() => {
     if (!searchTerm) return movements;
 
@@ -99,7 +80,6 @@ export const useMovementsPage = () => {
     });
   }, [movements, searchTerm]);
 
-  // Table columns definition
   const tableColumns: ColumnDefinition<MovementListItem>[] = useMemo(
     () => [
       {
@@ -143,7 +123,6 @@ export const useMovementsPage = () => {
         align: "left",
         width: "25%",
         render: (_, record) => {
-          // Generate description based on movement type since there's no description field
           const typeLabel =
             record.movementType === "DEPOSIT"
               ? "Depósito"

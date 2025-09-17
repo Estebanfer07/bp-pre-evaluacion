@@ -1,0 +1,109 @@
+@use "../../styles" as *;
+@use "sass:color";
+
+// Movements page specific styles
+.pdf-report-btn {
+  padding: $spacing-md $spacing-lg;
+  background-color: $info-color;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  white-space: nowrap;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($info-color, $lightness: -10%);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  &:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($info-color, 0.25);
+  }
+
+  // Add a PDF icon using pseudo-element
+  &::before {
+    content: "📄";
+    font-size: $font-size-sm;
+  }
+
+  @media (max-width: #{$breakpoint-sm}) {
+    justify-content: center;
+  }
+}
+
+// Movement type badges
+.movement-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: $border-radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+
+  &--deposit {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+  }
+
+  &--withdrawal {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+
+  &--transfer {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+  }
+}
+
+// Movement amount styling
+.amount {
+  font-weight: $font-weight-semibold;
+  font-family: "Monaco", "Menlo", monospace;
+
+  &.deposit {
+    color: #155724;
+  }
+
+  &.withdrawal {
+    color: #721c24;
+  }
+
+  &.transfer {
+    color: #856404;
+  }
+}
+
+// Balance styling
+.balance {
+  font-weight: $font-weight-semibold;
+  font-family: "Monaco", "Menlo", monospace;
+
+  &.negative {
+    color: #d32f2f;
+  }
+}

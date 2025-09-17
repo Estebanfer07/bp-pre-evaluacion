@@ -1,0 +1,35 @@
+@use "../../styles" as *;
+
+// Account type badges
+.account-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
+  border-radius: $border-radius-md;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  text-transform: uppercase;
+
+  &--aho {
+    background-color: #e1f5fe;
+    color: #0277bd;
+    border: 1px solid #b3e5fc;
+  }
+
+  &--cte {
+    background-color: #fff3e0;
+    color: #ef6c00;
+    border: 1px solid #ffcc02;
+  }
+}
+
+// Account balance styling
+.balance {
+  font-weight: $font-weight-semibold;
+  font-family: "Monaco", "Menlo", monospace;
+
+  &.negative {
+    color: #d32f2f;
+  }
+}
