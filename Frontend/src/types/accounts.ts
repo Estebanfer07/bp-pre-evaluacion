@@ -57,9 +57,10 @@ export const AccountListItemSchema = z.object({
   state: AccountStateSchema,
   clientName: z.string().optional(),
   createdAt: z.iso.datetime(),
+  clientId: z.uuid().optional(),
 });
 
-export type AccountListItem = z.infer<typeof AccountSchema>;
+export type AccountListItem = z.infer<typeof AccountListItemSchema>;
 
 export const AccountsListResponseSchema = z.array(AccountSchema);
 export type AccountsListResponse = z.infer<typeof AccountsListResponseSchema>;

@@ -7,8 +7,12 @@ import type {
   CreateAccount,
   UpdateAccount,
 } from "../../types/accounts";
+import { useClientsQueries } from "./useClientsQueries";
 
 export const useAccountsQueries = () => {
+  const { useGetClients } = useClientsQueries();
+  const { data: clients } = useGetClients();
+
   const queryClient = useQueryClient();
 
   const handleError = (error: AxiosError, operation: string) => {
@@ -46,7 +50,10 @@ export const useAccountsQueries = () => {
         return data.filter(
           (account) =>
             account.accountNumber.includes(search) ||
-            account.clientName?.toLowerCase().includes(searchLower) ||
+            (clients ?? [])
+              .find((client) => client.id === account.clientId)
+              ?.person.name.toLowerCase()
+              .includes(searchLower) ||
             account.type.toLowerCase().includes(searchLower)
         );
       },
@@ -166,3 +173,6 @@ export const useAccountsQueries = () => {
     useDeleteAccount,
   };
 };
+function useGetClients(): { data: any } {
+  throw new Error("Function not implemented.");
+}
