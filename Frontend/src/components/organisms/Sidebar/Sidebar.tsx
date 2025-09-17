@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link, useLocation } from '@tanstack/react-router';
-import './Sidebar.scss';
+import React from "react";
+import { Link, useLocation } from "@tanstack/react-router";
+import "./Sidebar.scss";
 
 interface SidebarItem {
   id: string;
@@ -9,10 +9,9 @@ interface SidebarItem {
 }
 
 const sidebarItems: SidebarItem[] = [
-  { id: 'clients', label: 'Clientes', to: '/clients' },
-  { id: 'accounts', label: 'Cuentas', to: '/accounts' },
-  { id: 'movements', label: 'Movimientos', to: '/movements' },
-  { id: 'reports', label: 'Reportes', to: '/reports' },
+  { id: "clients", label: "Clientes", to: "/clients" },
+  { id: "accounts", label: "Cuentas", to: "/accounts" },
+  { id: "movements", label: "Movimientos", to: "/movements" },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -26,18 +25,18 @@ export const Sidebar: React.FC = () => {
           <span className="sidebar__logo-text">BANCO</span>
         </div>
       </div>
-      
+
       <nav className="sidebar__nav">
         <ul className="sidebar__menu">
           {sidebarItems.map((item) => {
             const isActive = location.pathname === item.to;
-            
+
             return (
               <li key={item.id} className="sidebar__menu-item">
                 <Link
                   to={item.to}
                   className={`sidebar__menu-link ${
-                    isActive ? 'sidebar__menu-link--active' : ''
+                    isActive ? "sidebar__menu-link--active" : ""
                   }`}
                 >
                   {item.label}
