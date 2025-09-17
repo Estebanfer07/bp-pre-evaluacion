@@ -1,0 +1,1279 @@
+{
+	"info": {
+		"_postman_id": "459df15c-0ce4-412a-8e2f-41c09b69e283",
+		"name": "My Bank",
+		"description": "Postman collection for My Bank API endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12459431",
+		"_collection_link": "https://ec-apps.postman.co/workspace/EC-APPS~7d99c4cd-59f3-43e7-a27a-eae67645b359/collection/12459431-459df15c-0ce4-412a-8e2f-41c09b69e283?action=share&source=collection_link&creator=12459431"
+	},
+	"item": [
+		{
+			"name": "Accounts",
+			"item": [
+				{
+					"name": "Create Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"AHO\",\n  \"balance\": 10,\n  \"clientId\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Account Unexpected error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"AHO\",\n  \"balance\": 10,\n  \"clientId\": \"8ab1bc82-1d4f-4fec-80ce-1a24df2fe610\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts"
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:09:12 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"details\": \"An unexpected error occurred. Please contact support if the problem persists.\",\n    \"error\": \"Internal server error\"\n}"
+						},
+						{
+							"name": "Bad request type",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"AHO\",\n  \"balance\": 10,\n  \"clientId\": \"8a24df2fe610\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:11:07 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"field\": \"clientId\",\n    \"details\": \"The request could not be processed. Invalid value for field: clientId\",\n    \"error\": \"Malformed request body\"\n}"
+						},
+						{
+							"name": "Bad request restrictions",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"AHO\",\n  \"balance\": -10,\n  \"clientId\": \"8ab1bc82-1d4f-4fec-80ce-1a24df2fe610\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:11:29 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "close"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"details\": \"One or more fields are invalid.\",\n    \"error\": \"Invalid request parameters\",\n    \"fields\": \"balance\"\n}"
+						},
+						{
+							"name": "Create Account",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"AHO\",\n  \"balance\": 10,\n  \"clientId\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:57:28 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"d9400c20-7df8-4701-b5b0-521abc22eaab\",\n    \"clientId\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\",\n    \"client\": null,\n    \"accountNumber\": \"440129761982\",\n    \"type\": \"AHO\",\n    \"balance\": 10,\n    \"state\": \"ACTIVE\",\n    \"createdAt\": \"2025-09-15T18:57:28.234263\",\n    \"updatedAt\": \"2025-09-15T18:57:28.234492\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Account By ID",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"type\": \"CTE\",\n  \"balance\": 500\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/accounts/{{accountId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"{{accountId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Account By ID",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"type\": \"CTE\",\n  \"balance\": 500\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts/{{accountId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts",
+										"{{accountId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 22:35:21 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"f973bf27-6766-46a8-af0b-c0eea5d80454\",\n    \"accountNumber\": \"617523694382\",\n    \"type\": \"CTE\",\n    \"balance\": 500,\n    \"state\": \"ACTIVE\",\n    \"createdAt\": \"2025-09-15T17:34:57.307833\",\n    \"updatedAt\": \"2025-09-15T17:35:21.333159\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Accounts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/accounts",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"accounts"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Accounts",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 22:35:24 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"e0bc5577-943e-41d6-988c-49b96cab9ac7\",\n        \"accountNumber\": \"193440252202\",\n        \"type\": \"AHO\",\n        \"balance\": 10,\n        \"state\": \"ACTIVE\",\n        \"createdAt\": \"2025-09-15T17:32:23.279185\",\n        \"updatedAt\": \"2025-09-15T17:32:23.281222\"\n    },\n    {\n        \"id\": \"f973bf27-6766-46a8-af0b-c0eea5d80454\",\n        \"accountNumber\": \"617523694382\",\n        \"type\": \"CTE\",\n        \"balance\": 500,\n        \"state\": \"ACTIVE\",\n        \"createdAt\": \"2025-09-15T17:34:57.307833\",\n        \"updatedAt\": \"2025-09-15T17:35:21.333159\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Account By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/accounts/{{accountId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"{{accountId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Account By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts/{{accountId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts",
+										"{{accountId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 22:40:21 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"e0bc5577-943e-41d6-988c-49b96cab9ac7\",\n    \"accountNumber\": \"193440252202\",\n    \"type\": \"AHO\",\n    \"balance\": 10,\n    \"state\": \"ACTIVE\",\n    \"createdAt\": \"2025-09-15T17:32:23.279185\",\n    \"updatedAt\": \"2025-09-15T17:32:23.281222\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Account By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/accounts/{{accountId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"{{accountId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Account By ID",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/accounts/{{accountId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"accounts",
+										"{{accountId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 22:35:36 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Client",
+			"item": [
+				{
+					"name": "Get All Clients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/clients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"clients"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get All Clients",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/clients",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"clients"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:34:15 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"e74a3185-5624-40fe-bd96-3c12537b2318\",\n        \"person\": {\n            \"id\": \"099e8182-3f6a-45c4-b177-3188534b11c3\",\n            \"name\": \"John Doe\",\n            \"gender\": \"MALE\",\n            \"age\": 30,\n            \"identification\": \"1234567890\",\n            \"address\": \"123 Main St\",\n            \"phone\": \"555-1234\",\n            \"createdAt\": \"2025-09-15T18:13:48.24216\",\n            \"updatedAt\": \"2025-09-15T18:13:48.242401\"\n        },\n        \"password\": null,\n        \"accounts\": [],\n        \"state\": \"ACTIVE\",\n        \"createdAt\": \"2025-09-15T18:13:48.345614\",\n        \"updatedAt\": \"2025-09-15T18:13:48.34564\"\n    },\n    {\n        \"id\": \"bfded7e7-2350-4204-aad5-b0ec27936b37\",\n        \"person\": {\n            \"id\": \"6a52f25d-934e-4660-9281-f7b22162aefe\",\n            \"name\": \"John Doe\",\n            \"gender\": \"MALE\",\n            \"age\": 30,\n            \"identification\": \"1234567891\",\n            \"address\": \"123 Main St\",\n            \"phone\": \"555-1234\",\n            \"createdAt\": \"2025-09-15T18:25:05.679267\",\n            \"updatedAt\": \"2025-09-15T18:25:05.679352\"\n        },\n        \"password\": null,\n        \"accounts\": [],\n        \"state\": \"ACTIVE\",\n        \"createdAt\": \"2025-09-15T18:25:05.71364\",\n        \"updatedAt\": \"2025-09-15T18:25:05.713662\"\n    },\n    {\n        \"id\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\",\n        \"person\": {\n            \"id\": \"138df0a2-f435-4bec-a367-bc260672f5c2\",\n            \"name\": \"Jane Doe\",\n            \"gender\": \"FEMALE\",\n            \"age\": 28,\n            \"identification\": \"1234567892\",\n            \"address\": \"456 Main St\",\n            \"phone\": \"555-5678\",\n            \"createdAt\": \"2025-09-15T18:28:37.550879\",\n            \"updatedAt\": \"2025-09-15T18:33:52.976274\"\n        },\n        \"password\": null,\n        \"accounts\": [],\n        \"state\": \"ACTIVE\",\n        \"createdAt\": \"2025-09-15T18:28:37.644451\",\n        \"updatedAt\": \"2025-09-15T18:33:53.026603\"\n    }\n]"
+						}
+					]
+				},
+				{
+					"name": "Create Client",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"gender\": \"MALE\",\n  \"age\": 30,\n  \"identification\": \"1234567892\",\n  \"address\": \"123 Main St\",\n  \"phone\": \"555-1234\",\n  \"password\": \"securePass123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/clients",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"clients"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Client",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"John Doe\",\n  \"gender\": \"MALE\",\n  \"age\": 30,\n  \"identification\": \"1234567892\",\n  \"address\": \"123 Main St\",\n  \"phone\": \"555-1234\",\n  \"password\": \"securePass123\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/clients",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"clients"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:28:37 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\",\n    \"person\": {\n        \"id\": \"138df0a2-f435-4bec-a367-bc260672f5c2\",\n        \"name\": \"John Doe\",\n        \"gender\": \"MALE\",\n        \"age\": 30,\n        \"identification\": \"1234567892\",\n        \"address\": \"123 Main St\",\n        \"phone\": \"555-1234\",\n        \"createdAt\": \"2025-09-15T18:28:37.550879\",\n        \"updatedAt\": \"2025-09-15T18:28:37.55096\"\n    },\n    \"password\": null,\n    \"accounts\": null,\n    \"state\": \"ACTIVE\",\n    \"createdAt\": \"2025-09-15T18:28:37.644451\",\n    \"updatedAt\": \"2025-09-15T18:28:37.644474\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Client By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/clients/{{clientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Client By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/clients/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"clients",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:30:59 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\",\n    \"person\": {\n        \"id\": \"138df0a2-f435-4bec-a367-bc260672f5c2\",\n        \"name\": \"John Doe\",\n        \"gender\": \"MALE\",\n        \"age\": 30,\n        \"identification\": \"1234567892\",\n        \"address\": \"123 Main St\",\n        \"phone\": \"555-1234\",\n        \"createdAt\": \"2025-09-15T18:28:37.550879\",\n        \"updatedAt\": \"2025-09-15T18:28:37.55096\"\n    },\n    \"password\": null,\n    \"accounts\": [],\n    \"state\": \"ACTIVE\",\n    \"createdAt\": \"2025-09-15T18:28:37.644451\",\n    \"updatedAt\": \"2025-09-15T18:28:37.644474\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Client By ID",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Jane Doe\",\n  \"gender\": \"FEMALE\",\n  \"age\": 28,\n  \"address\": \"456 Main St\",\n  \"phone\": \"555-5678\",\n  \"password\": \"newPass456\",\n  \"state\": \"ACTIVE\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/clients/{{clientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Client By ID",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Jane Doe\",\n  \"gender\": \"FEMALE\",\n  \"age\": 28,\n  \"address\": \"456 Main St\",\n  \"phone\": \"555-5678\",\n  \"password\": \"newPass456\",\n  \"state\": \"ACTIVE\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/clients/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"clients",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:33:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"2c841c81-cb3b-43f5-942e-d1b40f329e90\",\n    \"person\": {\n        \"id\": \"138df0a2-f435-4bec-a367-bc260672f5c2\",\n        \"name\": \"Jane Doe\",\n        \"gender\": \"FEMALE\",\n        \"age\": 28,\n        \"identification\": \"1234567892\",\n        \"address\": \"456 Main St\",\n        \"phone\": \"555-5678\",\n        \"createdAt\": \"2025-09-15T18:28:37.550879\",\n        \"updatedAt\": \"2025-09-15T18:33:52.976274\"\n    },\n    \"password\": null,\n    \"accounts\": [],\n    \"state\": \"ACTIVE\",\n    \"createdAt\": \"2025-09-15T18:28:37.644451\",\n    \"updatedAt\": \"2025-09-15T18:33:53.026603\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Client By ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/clients/{{clientId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"clients",
+								"{{clientId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Client By ID",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/clients/{{clientId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"clients",
+										"{{clientId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 15 Sep 2025 23:34:51 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Movements",
+			"item": [
+				{
+					"name": "Get Movements Report",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/movements/account/{{accountId}}/report?format=JSON",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"movements",
+								"account",
+								"{{accountId}}",
+								"report"
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "JSON"
+								},
+								{
+									"key": "from",
+									"value": "2025-09-01",
+									"disabled": true
+								},
+								{
+									"key": "to",
+									"value": "2025-09-15",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Movements Report JSON",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movements/account/{{accountId}}/report?format=JSON",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movements",
+										"account",
+										"{{accountId}}",
+										"report"
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "JSON"
+										},
+										{
+											"key": "from",
+											"value": "2025-09-01",
+											"disabled": true
+										},
+										{
+											"key": "to",
+											"value": "2025-09-15",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 16 Sep 2025 03:01:36 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"jsonReport\": [\n        {\n            \"date\": \"2025-09-15T21:25:50.496154\",\n            \"amount\": -100.0,\n            \"clientId\": \"1234567892\",\n            \"balance\": 10.0,\n            \"clientName\": \"Jane Doe\",\n            \"id\": \"97b704ef-ca9e-4ee0-af66-815d86ccdd64\",\n            \"type\": \"TRANSFER\",\n            \"accountNumber\": \"440129761982\"\n        },\n        {\n            \"date\": \"2025-09-15T21:25:42.621387\",\n            \"amount\": -100.0,\n            \"clientId\": \"1234567892\",\n            \"balance\": 110.0,\n            \"clientName\": \"Jane Doe\",\n            \"id\": \"8d99dc7a-ec2c-4416-9648-c9b1587cec6f\",\n            \"type\": \"WITHDRAWAL\",\n            \"accountNumber\": \"440129761982\"\n        },\n        {\n            \"date\": \"2025-09-15T20:14:23.617501\",\n            \"amount\": 100.0,\n            \"clientId\": \"1234567892\",\n            \"balance\": 210.0,\n            \"clientName\": \"Jane Doe\",\n            \"id\": \"11da8f70-73d1-4403-a138-0b03392bac3b\",\n            \"type\": \"DEPOSIT\",\n            \"accountNumber\": \"440129761982\"\n        },\n        {\n            \"date\": \"2025-09-15T20:11:35.319911\",\n            \"amount\": 100.0,\n            \"clientId\": \"1234567892\",\n            \"balance\": 110.0,\n            \"clientName\": \"Jane Doe\",\n            \"id\": \"0cde8f7e-b2ef-4e67-9fab-b2df531d50e8\",\n            \"type\": \"DEPOSIT\",\n            \"accountNumber\": \"440129761982\"\n        }\n    ]\n}"
+						},
+						{
+							"name": "Get Movements Report PDF",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movements/account/{{accountId}}/report?format=PDF",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movements",
+										"account",
+										"{{accountId}}",
+										"report"
+									],
+									"query": [
+										{
+											"key": "format",
+											"value": "PDF"
+										},
+										{
+											"key": "from",
+											"value": "2025-09-01",
+											"disabled": true
+										},
+										{
+											"key": "to",
+											"value": "2025-09-15",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 16 Sep 2025 03:50:28 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"pdfReport\": \"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0AplbmRzdHJlYW0KZW5kb2JqCjEgMCBvYmoKPDwvQ29udGVudHMgNCAwIFIvVHlwZS9QYWdlL1Jlc291cmNlczw8L1Byb2NTZXQgWy9QREYgL1RleHQgL0ltYWdlQiAvSW1hZ2VDIC9JbWFnZUldL0ZvbnQ8PC9GMSAyIDAgUi9GMiAzIDAgUj4+Pj4vUGFyZW50IDUgMCBSL01lZGlhQm94WzAgMCA4NDEuODggNTk1LjI4XT4+CmVuZG9iago3IDAgb2JqCjw8L0Rlc3RbMSAwIFIvRml0SCA1OTUuMjhdL1RpdGxlKEFsbCBBY2NvdW50cyBNb3ZlbWVudCBSZXBvcnQpL1BhcmVudCA2IDAgUj4+CmVuZG9iago2IDAgb2JqCjw8L1R5cGUvT3V0bGluZXMvQ291bnQgMS9GaXJzdCA3IDAgUi9MYXN0IDcgMCBSPj4KZW5kb2JqCjIgMCBvYmoKPDwvU3VidHlwZS9UeXBlMS9UeXBlL0ZvbnQvQmFzZUZvbnQvVGltZXMtQm9sZC9FbmNvZGluZy9XaW5BbnNpRW5jb2Rpbmc+PgplbmRvYmoKMyAwIG9iago8PC9TdWJ0eXBlL1R5cGUxL1R5cGUvRm9udC9CYXNlRm9udC9UaW1lcy1Sb21hbi9FbmNvZGluZy9XaW5BbnNpRW5jb2Rpbmc+PgplbmRvYmoKNSAwIG9iago8PC9LaWRzWzEgMCBSXS9UeXBlL1BhZ2VzL0NvdW50IDEvSVRYVCgxLjMuMTEpPj4KZW5kb2JqCjggMCBvYmoKPDwvUGFnZU1vZGUvVXNlT3V0bGluZXMvVHlwZS9DYXRhbG9nL091dGxpbmVzIDYgMCBSL1BhZ2VzIDUgMCBSPj4KZW5kb2JqCjkgMCBvYmoKPDwvVGl0bGUoQWxsIEFjY291bnRzIE1vdmVtZW50IFJlcG9ydCk+PgplbmRvYmoKeHJlZgowIDEwCjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMTgxOSAwMDAwMCBuIAowMDAwMDAyMTQ5IDAwMDAwIG4gCjAwMDAwMDIyMzggMDAwMDAgbiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAyMzI4IDAwMDAwIG4gCjAwMDAwMDIwODQgMDAwMDAgbiAKMDAwMDAwMTk5MSAwMDAwMCBuIAowMDAwMDAyMzkyIDAwMDAwIG4gCjAwMDAwMDI0NzMgMDAwMDAgbiAKdHJhaWxlcgo8PC9JbmZvIDkgMCBSL0lEIFs8ZGU1MzdkMWU3NjI4ZWRjOTg5OWVmN2YxZGMxZTZkYmM+PGY5YmJjZjc4YzM3ZTQxMGIxMzA2NDI1NmE2NmUwZTBhPl0vUm9vdCA4IDAgUi9TaXplIDEwPj4Kc3RhcnR4cmVmCjI1MjkKJSVFT0YK\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Movement",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"movementType\": \"TRANSFER\",\n  \"amount\": 100.00\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/movements",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"movements"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Movement",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"accountId\": \"{{accountId}}\",\n  \"movementType\": \"DEPOSIT\",\n  \"amount\": 100.00\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/movements",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movements"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 16 Sep 2025 01:14:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"32026174-708a-4621-9689-337fecb4ccca\",\n    \"accountId\": \"d9400c20-7df8-4701-b5b0-521abc22eaab\",\n    \"date\": \"2025-09-15T20:14:53.28965\",\n    \"movementType\": \"DEPOSIT\",\n    \"amount\": 100,\n    \"balance\": 310,\n    \"createdAt\": \"2025-09-15T20:14:53.296931\",\n    \"updatedAt\": \"2025-09-15T20:14:53.296957\",\n    \"reversed\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Movement By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/movements/{{movementId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"movements",
+								"{{movementId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get Movement By ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movements/{{movementId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movements",
+										"{{movementId}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 16 Sep 2025 01:17:15 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": \"32026174-708a-4621-9689-337fecb4ccca\",\n    \"accountId\": \"d9400c20-7df8-4701-b5b0-521abc22eaab\",\n    \"date\": \"2025-09-15T20:14:53.28965\",\n    \"movementType\": \"DEPOSIT\",\n    \"amount\": 100,\n    \"balance\": 310,\n    \"createdAt\": \"2025-09-15T20:14:53.296931\",\n    \"updatedAt\": \"2025-09-15T20:14:53.296957\",\n    \"reversed\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Movement By ID (Soft Delete)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/movements/{{movementId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"movements",
+								"{{movementId}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Movement By ID (Soft Delete)",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/movements/{{movementId}}",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"movements",
+										"{{movementId}}"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Date",
+									"value": "Tue, 16 Sep 2025 01:18:48 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8081"
+		},
+		{
+			"key": "accountId",
+			"value": "5302e7d6-3c3a-4754-8479-7715a6d3f8e6"
+		},
+		{
+			"key": "clientId",
+			"value": "2c841c81-cb3b-43f5-942e-d1b40f329e90"
+		},
+		{
+			"key": "movementId",
+			"value": "32026174-708a-4621-9689-337fecb4ccca"
+		}
+	]
+}
